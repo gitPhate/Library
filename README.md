@@ -53,11 +53,21 @@ DaysOfWeek::isValidValue('Friday');                  // false
 ```
 
 #### Lazy
-It's my version of the [lazy loading](http://en.wikipedia.org/wiki/Lazy_loading).
+It's my version of the [lazy loading](http://en.wikipedia.org/wiki/Lazy_loading). It can store a callback or an object, and execute or instantiate it later, using the Value() method.
 
-<table>
-  <tr>
-    <td>Nome</td>
-    <td>Descrizione</td>
-  </tr>
-</table>
+```PHP
+$lazy = new Library\Lazy(function($a, $b) {
+	return $a + $b;
+}, 1, 2);
+
+echo $lazy->Value(); //3
+```
+
+You can pass parameters to the callback both in the constructor or in the evaluation method:
+```PHP
+$lazy = new Library\Lazy(function($a, $b) {
+	return $a + $b;
+});
+
+$lazy->Value(1, 2) //3;
+```
