@@ -1,0 +1,69 @@
+<NotepadPlus>
+    <Project name="Library">
+        <Folder name="collection">
+            <File name="collection\Collection.php" />
+            <File name="collection\ICollection.php" />
+        </Folder>
+        <Folder name="exceptions">
+            <File name="exceptions\ArgumentException.php" />
+            <File name="exceptions\InvalidOperationException.php" />
+            <File name="exceptions\LibraryException.php" />
+            <File name="exceptions\NotFoundException.php" />
+        </Folder>
+        <Folder name="sql">
+            <Folder name="QueryBuilder">
+                <Folder name="Enums">
+                    <File name="sql\QueryBuilder\Enums\JoinConditionType.php" />
+                    <File name="sql\QueryBuilder\Enums\JoinType.php" />
+                    <File name="sql\QueryBuilder\Enums\OrderByOperator.php" />
+                    <File name="sql\QueryBuilder\Enums\StatementType.php" />
+                    <File name="sql\QueryBuilder\Enums\WhereType.php" />
+                </Folder>
+                <Folder name="QueryItems">
+                    <File name="sql\QueryBuilder\QueryItems\JoinCondition.php" />
+                    <File name="sql\QueryBuilder\QueryItems\OrderByField.php" />
+                    <File name="sql\QueryBuilder\QueryItems\QueryItem.php" />
+                    <File name="sql\QueryBuilder\QueryItems\SelectField.php" />
+                    <File name="sql\QueryBuilder\QueryItems\Table.php" />
+                    <File name="sql\QueryBuilder\QueryItems\UpdatePair.php" />
+                </Folder>
+                <Folder name="Statements">
+                    <File name="sql\QueryBuilder\Statements\BaseStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\GroupByStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\HavingStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\JoinStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\LimitStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\OrderByStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\OtherStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\UnionStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\UpdateStatement.php" />
+                    <File name="sql\QueryBuilder\Statements\WhereStatement.php" />
+                </Folder>
+                <File name="sql\QueryBuilder\AggregateFunctions.php" />
+                <File name="sql\QueryBuilder\BaseQuery.php" />
+                <File name="sql\QueryBuilder\Builder.php" />
+                <File name="sql\QueryBuilder\ConditionParser.php" />
+                <File name="sql\QueryBuilder\DeleteQuery.php" />
+                <File name="sql\QueryBuilder\InsertQuery.php" />
+                <File name="sql\QueryBuilder\ParamsBinder.php" />
+                <File name="sql\QueryBuilder\RawQueryBuilder.php" />
+                <File name="sql\QueryBuilder\readme.txt" />
+                <File name="sql\QueryBuilder\SelectQuery.php" />
+                <File name="sql\QueryBuilder\SqlFunctions.php" />
+                <File name="sql\QueryBuilder\UpdateQuery.php" />
+            </Folder>
+            <File name="sql\Database.php" />
+            <File name="sql\DatabaseConfig.php" />
+        </Folder>
+        <Folder name="utilities">
+            <File name="utilities\CallbackManager.php" />
+            <File name="utilities\UtilitiesService.php" />
+        </Folder>
+        <File name="autoload.php" />
+        <File name="BaseEnum.php" />
+        <File name="Lazy.php" />
+        <File name="npp_project" />
+        <File name="Singleton.php" />
+        <File name="todo.txt" />
+    </Project>
+</NotepadPlus>
