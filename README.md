@@ -21,9 +21,13 @@ Let's see them one by one.
 
 ## Main Namespace (Library\\)
 ### Classes:
+  * class autoload
   * BaseEnum
   * Lazy
   * Singleton
+
+### class autoload
+There's a primitive class loader that must be included in any project that uses the library. It is in Library\autoload.php
 
 #### BaseEnum
 It's an attempt to use enumerations in PHP. It's not mine, I found it here: http://stackoverflow.com/a/254543/4499267
@@ -70,4 +74,38 @@ $lazy = new Library\Lazy(function($a, $b) {
 });
 
 $lazy->Value(1, 2) //3;
+```
+
+Used with objects it lazy-evaluates them:
+```PHP
+class MyClass
+{
+    public function __construct()
+    {
+        echo "MyClass";
+    }
+}
+
+$lazy = new Library\Lazy("MyClass");
+$lazy->Value(); //MyClass
+```
+
+### Singleton
+It's an abstract class that implements the [singleton pattern](http://en.wikipedia.org/wiki/Singleton_pattern). A short example:
+```PHP
+class MyClass extends Library\Singleton
+{
+    public $counter = 1;
+    
+    public function __construct()
+    {
+        echo "I'm the instance number {$this->counter}";
+        $this->counter++;
+    }
+}
+
+$obj = MyClass::getInstance(); //I'm the instance number 1
+$obj = MyClass::getInstance(); //Doesn't print anything else, because the class is instantiated just once
+$obj = MyClass::getInstance();
+$obj = MyClass::getInstance();
 ```
