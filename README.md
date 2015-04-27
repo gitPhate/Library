@@ -161,7 +161,10 @@ at Library\Sql\QueryBuilder\BaseQuery.WhereClause(BaseQuery.php:107)
 Library\Sql\QueryBuilder\BaseQuery.Where(index.php:5)
 ```
 
-Other exception classes work the same.
+Other exception classes work the same; the prototype of a generic exceptions is:
+```PHP
+public function __construct($message, $code = 0, Exception $previous = null);
+```
 
 ## Sql Namespace (Library\\Sql)
 ### Namespaces:
