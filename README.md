@@ -5,17 +5,27 @@ So this is the main documentation, as I'm too lazy to build a website.
 
 I'll introduce myself: I'm a 20-year-old guy from Florence, Italy. I work in an IT company and I'm learning C# and OOP basics.
 
-Let's start with the docs. There are some namespace, I will split docs by namespace to keep things ordered. I tried to follow the [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) standard, so they will match the directory tree, which is:
-
-    |---Library
-        |---Collection
-        |---Exceptions
-        |---Sql
-        │   |---QueryBuilder
-        │       |---Enums
-        │       |---QueryItems
-        │       |---Statements
-        |---Utilities
+Let's start with the docs. There are some namespace, I will split docs by namespace to keep things ordered. I tried to follow the [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) standard, so they will match the directory tree.
+- [Library/](#main-namespace-library)
+  - Collection/
+    - ICollection
+    - Collection
+  - Exceptions/
+    - LibraryException
+    - ArgumentException
+    - InvalidOperationException
+    - NotFoundException
+  - Sql/
+    - QueryBuilder
+    - Database
+    - DatabaseConfig
+  - Utilities/
+    - CallBackManager
+    - UtilitiesService
+- [class autoload](#class-autoload)
+- [BaseEnum](#baseenum)
+- [Lazy](#lazy)
+- [Singleton](#singleton)
 
 Let's see them one by one.
 
@@ -167,12 +177,19 @@ public function __construct($message, $code = 0, Exception $previous = null);
 ```
 
 ## Sql Namespace (Library\\Sql)
-### Namespaces:
-  * QueryBuilder
-    * Enums
-    * QueryItems
-    * Statements
 
 ### Classes:
   * Database
   * DatabaseConfig
+  * QueryBuilder
+
+#### Database
+It is for now an old attempt to create a wrapper of a mysqli stream. Still work in progress!
+
+#### DatabaseConfig
+It's an object that contains the configuration of the database. Its only method is `CreateNewConnection()` that returns a mysqli pointer, anyway it must be revised.
+
+Constructor: `public function __construct($host, $user, $psw, $name)`
+
+#### QueryBuilder
+It's a set of functions that creates a sql query. For now it's built on MySql, I haven't tested it on other dbms.
