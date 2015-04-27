@@ -16,7 +16,7 @@ Let's start with the docs. There are some namespace, I will split docs by namesp
     - InvalidOperationException
     - NotFoundException
   - Sql/
-    - QueryBuilder
+    - [QueryBuilder](#querybuilder)
     - Database
     - DatabaseConfig
   - Utilities/
@@ -193,3 +193,18 @@ Constructor: `public function __construct($host, $user, $psw, $name)`
 
 #### QueryBuilder
 It's a set of functions that creates a sql query. For now it's built on MySql, I haven't tested it on other dbms.
+These are the main functionalities:
+- Select
+- Where 
+- Join
+- Insert
+- Update
+- Delete
+- Raw Query
+
+##### Select queries
+
+
+And two static classes:
+- AggregateFunction
+- SqlFunction
