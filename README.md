@@ -26,7 +26,7 @@ Let's see them one by one.
   * Lazy
   * Singleton
 
-### class autoload
+#### class autoload
 There's a primitive class loader that must be included in any project that uses the library. It is in Library\autoload.php
 
 #### BaseEnum
@@ -90,8 +90,11 @@ $lazy = new Library\Lazy("MyClass");
 $lazy->Value(); //MyClass
 ```
 
-### Singleton
-It's an abstract class that implements the [singleton pattern](http://en.wikipedia.org/wiki/Singleton_pattern). A short example:
+#### Singleton
+It's an abstract class that implements the [singleton pattern](http://en.wikipedia.org/wiki/Singleton_pattern).
+It provides the `getInstance()` method that returns the instance of the class.
+
+A short example:
 ```PHP
 class MyClass extends Library\Singleton
 {
@@ -105,7 +108,68 @@ class MyClass extends Library\Singleton
 }
 
 $obj = MyClass::getInstance(); //I'm the instance number 1
-$obj = MyClass::getInstance(); //Doesn't print anything else, because the class is instantiated just once
-$obj = MyClass::getInstance();
+$obj = MyClass::getInstance(); //Doesn't print anything else, because the class is instantiated
+$obj = MyClass::getInstance(); //just once
 $obj = MyClass::getInstance();
 ```
+
+If you need to pass parameters to the constructor, just pass them to the `getInstance()` method:
+```PHP
+class MyClass extends Library\Singleton
+{
+    public $counter = 1;
+    
+    public function __construct($i)
+    {
+    	$this->counter = $i;
+        echo "I'm the instance number {$this->counter}";
+        $this->counter++;
+    }
+}
+
+$obj = MyClass::getInstance(1); //I'm the instance number 1
+```
+
+## Colletion Namespace (Library\\Collection)
+### Interfaces:
+  * ICollection
+
+### Classes:
+  * Collection
+
+Still work in progress, I'll update this section later.
+
+## Exceptions Namespace (Library\\Exceptions)
+### Classes:
+  * LibraryException
+  * ArgumentException
+  * InvalidOperationException
+  * NotFoundException
+
+#### LibraryException
+It's the library's base exception. It provides a small stack trace and a custom message to be thrown along with it.
+
+Example (thrown by Lazy class):
+```
+Uncaught Library\Exceptions\ArgumentException: Argument is neither a callback nor a valid class at Library\Lazy.__construct(index.php:4) thrown in [...]
+```
+
+Example (thrown by Query Builder):
+```
+Uncaught Library\Exceptions\ArgumentException: condition must be a string
+at Library\Sql\QueryBuilder\BaseQuery.WhereClause(BaseQuery.php:107)
+Library\Sql\QueryBuilder\BaseQuery.Where(index.php:5)
+```
+
+Other exception classes work the same.
+
+## Sql Namespace (Library\\Sql)
+### Namespaces:
+  * QueryBuilder
+    * Enums
+    * QueryItems
+    * Statements
+
+### Classes:
+  * Database
+  * DatabaseConfig
