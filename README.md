@@ -288,8 +288,8 @@ FROM table
 */
 ```
 
-In order to select distinct with multiple fields, replace the field name with an array: `array("field", "distinct" => true)`
-
+In order to select distinct with multiple fields, replace the field name with an array like: `array("field", "distinct" => true)`
+```PHP
 $query
     ->Select
     (
@@ -304,3 +304,105 @@ $query
 SELECT field1 AS alias1, DISTINCT field2 AS alias2
 FROM table
 */
+```
+
+##### Where
+The where clause can be used anywhere you need it, with the same rules. To insert a simple equal-to condition, do:
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->Where("field", "value")
+    ->toSql() // SELECT field FROM table WHERE field = 'value'
+```
+You can also set a negative condition using `WhereNot()`
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->WhereNot("field", "value")
+    ->toSql() // SELECT field FROM table WHERE field != 'value'
+```
+Leaving only one parameter equals to state 'is null':
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->Where("field")
+    ->toSql() // SELECT field FROM table WHERE field IS NULL
+```
+Or not null:
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->WhereNot("field")
+    ->toSql() // SELECT field FROM table WHERE field IS NOT NULL
+```
+###### Like
+Other operations requires the parameter to be binded to the condition, like:
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->Where("field > ?", 3)
+    ->toSql() // SELECT field FROM table WHERE field > 3
+```
+This works for all primary operators: `=, <>, >, <, >=, <=, !=`
+
+If you want to perform a `LIKE` match, you can set it in the condition:
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->Where("field LIKE %?", 'a')
+    ->toSql() // SELECT field FROM table WHERE field LIKE '%a'
+```
+It works for the three cases `%?, ?%, %?%`
+
+###### Between
+In order to use between you have to bind params to the conditions with labels. An example is better that a hundred words:
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->Where
+    (
+    	"field BETWEEN :value AND :value2",
+    	array(':value' => 1, ':value2' => 2)
+    )
+    ->toSql()
+    /*
+    SELECT field
+    FROM table
+    WHERE field BETWEEN 1 AND 2
+    */
+```
+`WhereNot()` doesn't work in these conditions.
+
+###### IN
+To set a condition with `IN`, use an array to specify the set of values:
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->Where
+    (
+    	"field",
+    	array(1, 2, 3, 4)
+    )
+    ->toSql() // SELECT field FROM table WHERE field IN (1, 2, 3, 4)
+```
+Negative one will then be:
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->WhereNot
+    (
+    	"field",
+    	array(1, 2, 3, 4)
+    )
+    ->toSql() // SELECT field FROM table WHERE field NOT IN (1, 2, 3, 4)
+```
+All string parameters are automatically wrapped with single quotes, and generally all parameters' values, injected from the outside, are automatically escaped by a parser, so there shouldn't be any Sql Injection.
