@@ -203,7 +203,15 @@ These are the main functionalities:
 - Insert
 - Update
 - Delete
-- Aggregate functions
+- SubQueries
+- Having
+- Limit
+- Order By
+- Group By
+- Aggregates and functions
+  - Count
+  - Sum, Avg, Min and Max
+  - Coalesce
 - Raw Query
 
 The main class is `QueryBuilder`, so all queries starts with creating a new instance of this class:
@@ -409,3 +417,16 @@ $query
     ->toSql() // SELECT field FROM table WHERE field NOT IN (1, 2, 3, 4)
 ```
 All string parameters are automatically wrapped with single quotes, and generally all parameters' values, injected from the outside, are automatically escaped by a parser, so there shouldn't be any Sql Injection.
+##### Join
+The join method is quite simple, it works the same for all joins type (inner, right and left join):
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->WhereNot
+    (
+    	"field",
+    	array(1, 2, 3, 4)
+    )
+    ->toSql() // SELECT field FROM table WHERE field NOT IN (1, 2, 3, 4)
+```
