@@ -7,18 +7,18 @@ I'll introduce myself: I'm a 20-year-old guy from Florence, Italy. I work in an 
 
 Let's start with the docs. There are some namespace, I will split docs by namespace to keep things ordered. I tried to follow the [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) standard, so they will match the directory tree.
 - [Library/](#main-namespace-library)
-  - Collection/
+  - [Collection/](#colletion-namespace-librarycollection)
     - ICollection
     - Collection
-  - Exceptions/
-    - LibraryException
-    - ArgumentException
-    - InvalidOperationException
-    - NotFoundException
-  - Sql/
+  - [Exceptions/](#exceptions-namespace-libraryexceptions)
+    - [LibraryException](#libraryexception)
+    - [ArgumentException](#libraryexception)
+    - [InvalidOperationException](#libraryexception)
+    - [NotFoundException](#libraryexception)
+  - [Sql/](#sql-namespace-librarysql)
     - [QueryBuilder](#querybuilder)
-    - Database
-    - DatabaseConfig
+    - [Database](#database)
+    - [DatabaseConfig](#databaseconfig)
   - Utilities/
     - CallBackManager
     - UtilitiesService
@@ -194,8 +194,11 @@ Constructor: `public function __construct($host, $user, $psw, $name)`
 #### QueryBuilder
 It's a set of functions that creates a sql query. For now it's built on MySql, I haven't tested it on other dbms.
 These are the main functionalities:
-- Select
-- Where 
+- [Select](#select-queries)
+- [Where](#where)
+  - [Like](#like)
+  - [Between](#between)
+  - [In](#in)
 - Join
 - Insert
 - Update
