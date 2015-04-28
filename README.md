@@ -200,11 +200,107 @@ These are the main functionalities:
 - Insert
 - Update
 - Delete
+- Aggregate functions
 - Raw Query
 
+The main class is `QueryBuilder`, so all queries starts with creating a new instance of this class:
+```PHP
+$query = new Library\Sql\QueryBuilder();
+```
+
 ##### Select queries
+Select queries uses some methods to select data, followed by the `From()` method to point the table.
+In order to get the query as a string, just append to the end of it the `toSql()` method.
 
+To select all elements use `SelectAll()`:
+```PHP
+$query
+    ->SelectAll()
+    ->From("table")
+    ->toSql() //SELECT * FROM table
+```
+You can also point out a table, this might be useful in complex queries:
+```PHP
+$query
+    ->SelectAll("table1")
+    ->From("table1")
+    ->InnerJoin("table2", "table1.id = table2.id")
+    ->toSql()
+    /*
+    SELECT table1.*
+    FROM table1
+    INNER JOIN table2 ON table1.id = table2.id
+    */
+```
+To select a single field just use the `Select()` method. You can also specify an alias
+```PHP
+$query
+    ->Select("field")
+    ->From("table")
+    ->toSql() // SELECT field FROM table
+  
+$query
+    ->Select("field", "alias")
+    ->From("table")
+    ->toSql() // SELECT field AS alias FROM table
+```
 
-And two static classes:
-- AggregateFunction
-- SqlFunction
+You can set a distinct field with `SelectDistinct()` using the same rules as above.
+
+You can select multiple fields also specifying aliases:
+```PHP
+$query
+    ->Select
+    (
+        array("field1", "field2")
+    )
+  ->From("table")
+  ->toSql() // SELECT field1, field2 FROM table
+
+$query
+    ->Select
+    (
+        array(
+            "alias1" => "field1",
+            "alias2" => "field2"
+        )
+    )
+  ->From("table")
+  ->toSql()
+/*
+SELECT field1 AS alias1, field2 AS alias2
+FROM table
+*/
+
+$query
+    ->Select
+    (
+        array(
+            "alias1" => "field1",
+            "field2"
+        )
+    )
+  ->From("table")
+  ->toSql()
+/*
+SELECT field1 AS alias1, field2
+FROM table
+*/
+```
+
+In order to select distinct with multiple fields, replace the field name with an array: `array("field", "distinct" => true)`
+
+$query
+    ->Select
+    (
+        array(
+            "alias1" => "field1",
+            "alias2" => array("field2", "distinct" => true)
+        )
+    )
+  ->From("table")
+  ->toSql()
+/*
+SELECT field1 AS alias1, DISTINCT field2 AS alias2
+FROM table
+*/
