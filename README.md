@@ -200,7 +200,7 @@ These are the main functionalities:
   - [Between](#between)
   - [In](#in)
 - [Join](#join)
-- Insert
+- [Insert](#insert-queries)
 - Update
 - Delete
 - SubQueries
@@ -262,23 +262,18 @@ You can set a distinct field with `SelectDistinct()` using the same rules as abo
 You can select multiple fields also specifying aliases:
 ```PHP
 $query
-    ->Select
-    (
-        array("field1", "field2")
-    )
-  ->From("table")
-  ->toSql() // SELECT field1, field2 FROM table
+	->Select(["field1", "field2"])
+	->From("table")
+	->toSql() // SELECT field1, field2 FROM table
 
 $query
     ->Select
-    (
-        array(
-            "alias1" => "field1",
-            "alias2" => "field2"
-        )
-    )
-  ->From("table")
-  ->toSql()
+    ([
+        "alias1" => "field1",
+        "alias2" => "field2"
+    ])
+	->From("table")
+	->toSql()
 /*
 SELECT field1 AS alias1, field2 AS alias2
 FROM table
@@ -286,14 +281,12 @@ FROM table
 
 $query
     ->Select
-    (
-        array(
-            "alias1" => "field1",
-            "field2"
-        )
-    )
-  ->From("table")
-  ->toSql()
+    ([
+        "alias1" => "field1",
+        "field2"
+    ])
+	->From("table")
+	->toSql()
 /*
 SELECT field1 AS alias1, field2
 FROM table
@@ -304,14 +297,12 @@ In order to select distinct with multiple fields, replace the field name with an
 ```PHP
 $query
     ->Select
-    (
-        array(
+    ([
             "alias1" => "field1",
-            "alias2" => array("field2", "distinct" => true)
-        )
-    )
-  ->From("table")
-  ->toSql()
+            "alias2" => ["field2", "distinct" => true]
+        ])
+	->From("table")
+	->toSql()
 /*
 SELECT field1 AS alias1, DISTINCT field2 AS alias2
 FROM table
@@ -381,7 +372,7 @@ $query
     ->Where
     (
     	"field BETWEEN :value AND :value2",
-    	array(':value' => 1, ':value2' => 2)
+    	[':value' => 1, ':value2' => 2]
     )
     ->toSql()
     /*
@@ -401,7 +392,7 @@ $query
     ->Where
     (
     	"field",
-    	array(1, 2, 3, 4)
+    	[1, 2, 3, 4]
     )
     ->toSql() // SELECT field FROM table WHERE field IN (1, 2, 3, 4)
 ```
@@ -413,7 +404,7 @@ $query
     ->WhereNot
     (
     	"field",
-    	array(1, 2, 3, 4)
+    	[1, 2, 3, 4]
     )
     ->toSql() // SELECT field FROM table WHERE field NOT IN (1, 2, 3, 4)
 ```
@@ -421,7 +412,7 @@ All string parameters are automatically wrapped with single quotes, and generall
 ##### Join
 The join method is quite simple, it works the same for all joins type (inner, right and left join):
 ```PHP
-InnerJoin(string $table, string $on_condition, [mixed $parameters]);
+InnerJoin(string $table, [string $alias], string $on_condition);
 ```
 Here's a working example:
 ```PHP
@@ -462,7 +453,35 @@ $query
     ->InnerJoin("table2", "table1.id = table2.id")
     ->AndCondition("table2.id = ?", 5)
     ->toSql()
+    /*
     SELECT table2.*
     FROM table1 
     INNER JOIN table2 ON table1.id = table2.id AND table2.id = 5
+    */
+```
+##### Insert queries
+With insert query you can fill the db with your data. There are two ways to do that, passing data or fill by query:
+```PHP
+$builder
+    ->Insert(['column1', 'column2', 'column3'])
+    ->Into("table")
+    ->Values(['column1' => 1, 'column2' => 2, 'column3' => 3])
+    ->toSql() // INSERT INTO table(column1,column2,column3) VALUES(1,2,3)
+```
+Of course the keys of the array that you pass to `Values()` must be the same in the array you pass to `Insert()`, or you'll get an exception.
+
+This is the by-query:
+```PHP
+$builder
+        ->Insert(['column1', 'column2', 'column3'])
+        ->Into("table")
+        ->FromQuery
+        (
+            $builder
+                ->Select(['col1', 'col2', 'col3'])
+                ->From("table2")
+                ->WhereNot("field")
+                //You donì't have to call toSql() here
+        )
+        ->ToSql() // INSERT INTO table(0,1,2) SELECT col1, col2, col3 FROM table2 WHERE field IS NOT NULL
 ```
