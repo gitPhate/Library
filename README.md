@@ -171,7 +171,7 @@ at Library\Sql\QueryBuilder\BaseQuery.WhereClause(BaseQuery.php:107)
 Library\Sql\QueryBuilder\BaseQuery.Where(index.php:5)
 ```
 
-Other exception classes work the same; the prototype of a generic exceptions is:
+Other exception classes work the same; the signature of a generic exceptions is:
 ```PHP
 public function __construct($message, $code = 0, Exception $previous = null);
 ```
@@ -204,14 +204,13 @@ These are the main functionalities:
 - [Update](#update-queries)
 - [Delete](#delete-queries)
 - [SubQueries](#subqueries)
-- Having
+- Order By and Group By
 - Limit
-- Order By
-- Group By
 - Aggregate and sql functions
   - Count
   - Sum, Avg, Min and Max
   - Coalesce
+- Having
 - Raw Query
 - Union and Union All
 
@@ -526,15 +525,152 @@ $builder
 
 ##### Delete queries
 To delete from a table, use the method `DeleteFrom()` and set a Where condition if you like:
+```PHP
 $builder
 	->DeleteFrom("table")
 	->Where("a", 0)
 	// DELETE FROM table WHERE a = 'lol'
-	
+```
 [Index](#querybuilder)
 
-##### SubQuries
+##### SubQueries
 Still work in progress!
 
 [Index](#querybuilder)
 
+##### Aggregate and sql functions
+There are two static classes in order to represent aggregate functions and other ones. You can use them anywhere you like.
+
+Distinct functions set the arguments distinct, so `CountDistinct(column)` will generate `COUNT(DISTINCT column)`.
+Aggregate functions are in the AggregateFunctions class:
+```PHP
+AggregateFunctions::Sum(string $column, [string $alias])
+AggregateFunctions::SumDistinct(string $column, [string $alias])
+
+AggregateFunctions::Count(string $column, [string $alias])
+AggregateFunctions::CountDistinct(string $column, [string $alias])
+AggregateFunctions::CountAll([string $alias])
+
+AggregateFunctions::Avg(string $column, [string $alias])
+AggregateFunctions::AvgDistinct(string $column, [string $alias])
+
+AggregateFunctions::Min(string $column, [string $alias])
+AggregateFunctions::MinDistinct(string $column, [string $alias])
+
+AggregateFunctions::Max(string $column, [string $alias])
+AggregateFunctions::MaxDistinct(string $column, [string $alias])
+```
+
+While other functions are in the SqlFunctions one:
+```PHP
+SqlFunctions::Coalesce(mixed $val1, [mixed $val2, ...])
+```
+
+[Index](#querybuilder)
+
+##### Order By and Group By
+`GroupBy()` is a simple method, here's its signature:
+```PHP
+public function GroupBy(string $column1, [string $column2, ...])
+```
+`OrderBy()` can accept a string or an array as parameter, and you can also indicate `ASC/DESC` order for each field.
+Examples of Grouping:
+```PHP
+$query
+    ->Select
+    ([
+        "field",
+        AggregateFunctions::CountAll("count")
+    ])
+    ->From("table")
+    ->GroupBy("field")
+/*
+SELECT field, COUNT(*) AS count
+FROM table
+GROUP BY count
+*/
+
+$query
+    ->Select
+    ([
+        "field1",
+        "field2",
+        AggregateFunctions::CountAll("count")
+    ])
+    ->From("table")
+    ->GroupBy("field1", "field2")
+/*
+SELECT field1, field2, COUNT(*) AS count
+FROM table
+GROUP BY field1, field2
+*/
+```
+
+and Ordering:
+```PHP
+$query
+	->Select(["field1", "field2"])
+	->From("table")
+	->OrderBy("field1")
+    ->toSql();
+    // SELECT field1, field2 FROM table ORDER BY field1
+    
+$query
+	->Select(["field1", "field2"])
+	->From("table")
+	->OrderBy("field1 ASC")
+    ->toSql();
+    // SELECT field1, field2 FROM table ORDER BY field1
+    
+$query
+	->Select(["field1", "field2"])
+	->From("table")
+	->OrderBy
+    ([
+        "field1",
+        "field2 DESC"
+    ])
+    ->toSql();
+    // SELECT field1, field2 FROM table ORDER BY field1, field2 DESC
+```
+
+##### Having
+Having works along with AggregateFunctions, and is designed to accept only this kind of expressions.
+There is the `Having()` method that works like this:
+```PHP
+$query
+	->Select
+    ([
+        "field1",
+        "field2"
+    ])
+    ->From("table")
+    ->GroupBy("field2")
+    ->Having(AggregateFunctions::Count("field2"), "> ?", 0)
+/*
+SELECT field1, field2
+FROM table
+GROUP BY field2
+HAVING COUNT(field2) > 0
+*/
+```
+Parameters are binded to the condition for security reason.
+
+One shorter way to do this can be
+```PHP
+$query
+	->Select
+    ([
+        "field1",
+        "field2"
+    ])
+    ->From("table")
+    ->GroupBy("field2")
+    ->Having("field2")
+/*
+SELECT field1, field2
+FROM table
+GROUP BY field2
+HAVING COUNT(field2) > 0
+*/
+```
