@@ -199,7 +199,7 @@ These are the main functionalities:
   - [Like](#like)
   - [Between](#between)
   - [In](#in)
-- Join
+- [Join](#join)
 - Insert
 - Update
 - Delete
@@ -208,11 +208,12 @@ These are the main functionalities:
 - Limit
 - Order By
 - Group By
-- Aggregates and functions
+- Aggregate and sql functions
   - Count
   - Sum, Avg, Min and Max
   - Coalesce
 - Raw Query
+- Union and Union All
 
 The main class is `QueryBuilder`, so all queries starts with creating a new instance of this class:
 ```PHP
@@ -420,13 +421,48 @@ All string parameters are automatically wrapped with single quotes, and generall
 ##### Join
 The join method is quite simple, it works the same for all joins type (inner, right and left join):
 ```PHP
+InnerJoin(string $table, string $on_condition, [mixed $parameters]);
+```
+Here's a working example:
+```PHP
 $query
-    ->Select("field")
-    ->From("table")
-    ->WhereNot
-    (
-    	"field",
-    	array(1, 2, 3, 4)
-    )
-    ->toSql() // SELECT field FROM table WHERE field NOT IN (1, 2, 3, 4)
+    ->SelectAll("table2")
+    ->From("table1")
+    ->InnerJoin("table2", "table1.id = table2.id")
+    ->Where("table1.id", 2)
+    ->toSql()
+/*
+SELECT table2.*
+FROM table1
+INNER JOIN table2 ON table1.id = table2.id
+WHERE table1.id = 2
+*/
+```
+You can also specify an alias for the join table:
+```PHP
+$query
+    ->SelectAll("table2")
+    ->From("table1")
+    ->InnerJoin("table2", "alias", "table1.id = table2.id")
+    ->Where("table1.id", 2)
+    ->toSql()
+/*
+SELECT table2.*
+FROM table1
+INNER JOIN table2 alias ON table1.id = table2.id
+WHERE table1.id = 2
+*/
+```
+
+To add more than one condition you can use AndCondition() and OrCondition():
+```PHP
+$query
+    ->SelectAll("table2")
+    ->From("table1")
+    ->InnerJoin("table2", "table1.id = table2.id")
+    ->AndCondition("table2.id = ?", 5)
+    ->toSql()
+    SELECT table2.*
+    FROM table1 
+    INNER JOIN table2 ON table1.id = table2.id AND table2.id = 5
 ```
