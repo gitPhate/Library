@@ -201,7 +201,7 @@ These are the main functionalities:
   - [In](#in)
 - [Join](#join)
 - [Insert](#insert-queries)
-- Update
+- [Update](#update-queries)
 - Delete
 - SubQueries
 - Having
@@ -215,6 +215,7 @@ These are the main functionalities:
 - Raw Query
 - Union and Union All
 
+[Main index](#library)
 The main class is `QueryBuilder`, so all queries starts with creating a new instance of this class:
 ```PHP
 $query = new Library\Sql\QueryBuilder();
@@ -293,7 +294,7 @@ FROM table
 */
 ```
 
-In order to select distinct with multiple fields, replace the field name with an array like: `array("field", "distinct" => true)`
+In order to select distinct with multiple fields, replace the field name with an array like: `["field", "distinct" => true]`
 ```PHP
 $query
     ->Select
@@ -308,6 +309,8 @@ SELECT field1 AS alias1, DISTINCT field2 AS alias2
 FROM table
 */
 ```
+
+[Index](#querybuilder)
 
 ##### Where
 The where clause can be used anywhere you need it, with the same rules. To insert a simple equal-to condition, do:
@@ -484,4 +487,34 @@ $builder
                 //You donì't have to call toSql() here
         )
         ->ToSql() // INSERT INTO table(0,1,2) SELECT col1, col2, col3 FROM table2 WHERE field IS NOT NULL
+```
+
+##### Update queries
+With update queries you can set a single value:
+```PHP
+$builder
+	->Update("lol")
+	->Set("id", 2)
+	->toSql() // UPDATE lol SET id = 2
+ ```
+ Or a set of values:
+ ```PHP
+$builder
+    ->Update("lol")
+    ->Set(['x' => 1, 'y' => "lol"])
+    ->toSql() // UPDATE lol SET x = 1, y = 'lol'
+ ```
+
+Or you can fill a column with a query:
+ ```PHP
+$builder
+    ->Update("lol")
+    ->Set
+    ([
+        'x' => 1,
+        'y' => $builder
+                ->SelectAll()
+                ->From("asd")
+    ])
+    ->toSql() // UPDATE lol SET x = 1, y = (SELECT * FROM asd)
 ```
