@@ -19,9 +19,7 @@ Let's start with the docs. There are some namespace, I will split docs by namesp
     - [QueryBuilder](#querybuilder)
     - [Database](#database)
     - [DatabaseConfig](#databaseconfig)
-  - Utilities/
-    - CallBackManager
-    - UtilitiesService
+  - [Utilities/](#utilities-namespace-libraryutilities)
 - [class autoload](#class-autoload)
 - [BaseEnum](#baseenum)
 - [Lazy](#lazy)
@@ -208,7 +206,7 @@ These are the main functionalities:
 - [Update](#update-queries)
 - [Delete](#delete-queries)
 - [Raw Query](#raw-query)
-- Union and Union All
+- [Union and Union All](#union-and-union-all)
 
 [Main index](#library)
 
@@ -710,3 +708,9 @@ UNION
 SELECT * FROM table2
 */
 ```
+[Index](#querybuilder)
+
+## Utilities Namespace (Library\\Utilities)
+This is a namespace in which I put a set of classes and function that I use around the library. This means that all the stuff in there is not meant for development, there are component used by other classes in the project.
+
+For the moment I will not keep a documentation of this namespace.
