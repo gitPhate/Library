@@ -200,18 +200,14 @@ These are the main functionalities:
   - [Between](#between)
   - [In](#in)
 - [Join](#join)
+- [SubQueries](#subqueries)
+- [Aggregate and sql functions](#aggregate-and-sql-functions)
+- [Order By, Group By and Limit](#order-by-group-by-and-limit)
+- [Having](#having)
 - [Insert](#insert-queries)
 - [Update](#update-queries)
 - [Delete](#delete-queries)
-- [SubQueries](#subqueries)
-- Order By and Group By
-- Limit
-- Aggregate and sql functions
-  - Count
-  - Sum, Avg, Min and Max
-  - Coalesce
-- Having
-- Raw Query
+- [Raw Query](#raw-query)
 - Union and Union All
 
 [Main index](#library)
@@ -461,6 +457,158 @@ $query
 
 [Index](#querybuilder)
 
+##### SubQueries
+Still work in progress!
+
+[Index](#querybuilder)
+
+##### Aggregate and sql functions
+There are two static classes in order to represent aggregate functions and other ones. You can use them anywhere you like.
+
+Distinct functions set the arguments distinct, so `CountDistinct(column)` will generate `COUNT(DISTINCT column)`.
+Aggregate functions are in the AggregateFunctions class:
+```PHP
+AggregateFunctions::Sum(string $column, [string $alias])
+AggregateFunctions::SumDistinct(string $column, [string $alias])
+
+AggregateFunctions::Count(string $column, [string $alias])
+AggregateFunctions::CountDistinct(string $column, [string $alias])
+AggregateFunctions::CountAll([string $alias])
+
+AggregateFunctions::Avg(string $column, [string $alias])
+AggregateFunctions::AvgDistinct(string $column, [string $alias])
+
+AggregateFunctions::Min(string $column, [string $alias])
+AggregateFunctions::MinDistinct(string $column, [string $alias])
+
+AggregateFunctions::Max(string $column, [string $alias])
+AggregateFunctions::MaxDistinct(string $column, [string $alias])
+```
+
+While other functions are in the SqlFunctions one:
+```PHP
+SqlFunctions::Coalesce(mixed $val1, [mixed $val2, ...])
+```
+
+[Index](#querybuilder)
+
+##### Order By, Group By and Limit
+`GroupBy()` is a simple method, here's its signature:
+```PHP
+public function GroupBy(string $column1, [string $column2, ...])
+```
+`OrderBy()` can accept a string or an array as parameter, and you can also indicate `ASC/DESC` order for each field.
+Examples of Grouping:
+```PHP
+$query
+    ->Select
+    ([
+        "field",
+        AggregateFunctions::CountAll("count")
+    ])
+    ->From("table")
+    ->GroupBy("field")
+/*
+SELECT field, COUNT(*) AS count
+FROM table
+GROUP BY count
+*/
+
+$query
+    ->Select
+    ([
+        "field1",
+        "field2",
+        AggregateFunctions::CountAll("count")
+    ])
+    ->From("table")
+    ->GroupBy("field1", "field2")
+/*
+SELECT field1, field2, COUNT(*) AS count
+FROM table
+GROUP BY field1, field2
+*/
+```
+
+and Ordering:
+```PHP
+$query
+	->Select(["field1", "field2"])
+	->From("table")
+	->OrderBy("field1")
+    ->toSql();
+    // SELECT field1, field2 FROM table ORDER BY field1
+    
+$query
+	->Select(["field1", "field2"])
+	->From("table")
+	->OrderBy("field1 ASC")
+    ->toSql();
+    // SELECT field1, field2 FROM table ORDER BY field1
+    
+$query
+	->Select(["field1", "field2"])
+	->From("table")
+	->OrderBy
+    ([
+        "field1",
+        "field2 DESC"
+    ])
+    ->toSql();
+    // SELECT field1, field2 FROM table ORDER BY field1, field2 DESC
+```
+
+Limit is very intuitive, it's placed always at the end of the query and its signature is:
+```PHP
+public function Limit(int $row_count)
+public function Limit(int $offset, int $row_count)
+```
+
+[Index](#querybuilder)
+
+##### Having
+Having works along with AggregateFunctions, and is designed to accept only this kind of expressions.
+There is the `Having()` method that works like this:
+```PHP
+$query
+	->Select
+    ([
+        "field1",
+        "field2"
+    ])
+    ->From("table")
+    ->GroupBy("field2")
+    ->Having(AggregateFunctions::Count("field2"), "> ?", 0)
+/*
+SELECT field1, field2
+FROM table
+GROUP BY field2
+HAVING COUNT(field2) > 0
+*/
+```
+Parameters are binded to the condition for security reason.
+
+One shorter way to do this can be
+```PHP
+$query
+	->Select
+    ([
+        "field1",
+        "field2"
+    ])
+    ->From("table")
+    ->GroupBy("field2")
+    ->Having("field2")
+/*
+SELECT field1, field2
+FROM table
+GROUP BY field2
+HAVING COUNT(field2) > 0
+*/
+```
+
+[Index](#querybuilder)
+
 ##### Insert queries
 With insert query you can fill the db with your data. There are two ways to do that, passing data or fill by query:
 ```PHP
@@ -533,144 +681,32 @@ $builder
 ```
 [Index](#querybuilder)
 
-##### SubQueries
-Still work in progress!
-
-[Index](#querybuilder)
-
-##### Aggregate and sql functions
-There are two static classes in order to represent aggregate functions and other ones. You can use them anywhere you like.
-
-Distinct functions set the arguments distinct, so `CountDistinct(column)` will generate `COUNT(DISTINCT column)`.
-Aggregate functions are in the AggregateFunctions class:
-```PHP
-AggregateFunctions::Sum(string $column, [string $alias])
-AggregateFunctions::SumDistinct(string $column, [string $alias])
-
-AggregateFunctions::Count(string $column, [string $alias])
-AggregateFunctions::CountDistinct(string $column, [string $alias])
-AggregateFunctions::CountAll([string $alias])
-
-AggregateFunctions::Avg(string $column, [string $alias])
-AggregateFunctions::AvgDistinct(string $column, [string $alias])
-
-AggregateFunctions::Min(string $column, [string $alias])
-AggregateFunctions::MinDistinct(string $column, [string $alias])
-
-AggregateFunctions::Max(string $column, [string $alias])
-AggregateFunctions::MaxDistinct(string $column, [string $alias])
-```
-
-While other functions are in the SqlFunctions one:
-```PHP
-SqlFunctions::Coalesce(mixed $val1, [mixed $val2, ...])
-```
-
-[Index](#querybuilder)
-
-##### Order By and Group By
-`GroupBy()` is a simple method, here's its signature:
-```PHP
-public function GroupBy(string $column1, [string $column2, ...])
-```
-`OrderBy()` can accept a string or an array as parameter, and you can also indicate `ASC/DESC` order for each field.
-Examples of Grouping:
+##### Raw Query
+This feature is to be enhances, for now you can only set a custom query like this:
 ```PHP
 $query
-    ->Select
-    ([
-        "field",
-        AggregateFunctions::CountAll("count")
-    ])
-    ->From("table")
-    ->GroupBy("field")
+	->RawQuery("SELECT * FROM table");
+```
+
+##### Union and Union All
+Union can be performed using the Union() or UnionAll() methods, which work exactly the same:
+```PHP
+$query
+	->SelectAll()
+    ->From("table1")
+    ->Limit(5)
+    ->Union
+    (
+        $query
+            ->SelectAll()
+            ->From("table2")
+            //You don't need to use toSql() here
+    )
 /*
-SELECT field, COUNT(*) AS count
-FROM table
-GROUP BY count
-*/
-
-$query
-    ->Select
-    ([
-        "field1",
-        "field2",
-        AggregateFunctions::CountAll("count")
-    ])
-    ->From("table")
-    ->GroupBy("field1", "field2")
-/*
-SELECT field1, field2, COUNT(*) AS count
-FROM table
-GROUP BY field1, field2
-*/
-```
-
-and Ordering:
-```PHP
-$query
-	->Select(["field1", "field2"])
-	->From("table")
-	->OrderBy("field1")
-    ->toSql();
-    // SELECT field1, field2 FROM table ORDER BY field1
-    
-$query
-	->Select(["field1", "field2"])
-	->From("table")
-	->OrderBy("field1 ASC")
-    ->toSql();
-    // SELECT field1, field2 FROM table ORDER BY field1
-    
-$query
-	->Select(["field1", "field2"])
-	->From("table")
-	->OrderBy
-    ([
-        "field1",
-        "field2 DESC"
-    ])
-    ->toSql();
-    // SELECT field1, field2 FROM table ORDER BY field1, field2 DESC
-```
-
-##### Having
-Having works along with AggregateFunctions, and is designed to accept only this kind of expressions.
-There is the `Having()` method that works like this:
-```PHP
-$query
-	->Select
-    ([
-        "field1",
-        "field2"
-    ])
-    ->From("table")
-    ->GroupBy("field2")
-    ->Having(AggregateFunctions::Count("field2"), "> ?", 0)
-/*
-SELECT field1, field2
-FROM table
-GROUP BY field2
-HAVING COUNT(field2) > 0
-*/
-```
-Parameters are binded to the condition for security reason.
-
-One shorter way to do this can be
-```PHP
-$query
-	->Select
-    ([
-        "field1",
-        "field2"
-    ])
-    ->From("table")
-    ->GroupBy("field2")
-    ->Having("field2")
-/*
-SELECT field1, field2
-FROM table
-GROUP BY field2
-HAVING COUNT(field2) > 0
+SELECT *
+FROM table1
+LIMIT 5
+UNION
+SELECT * FROM table2
 */
 ```
