@@ -216,6 +216,7 @@ These are the main functionalities:
 - Union and Union All
 
 [Main index](#library)
+
 The main class is `QueryBuilder`, so all queries starts with creating a new instance of this class:
 ```PHP
 $query = new Library\Sql\QueryBuilder();
@@ -230,7 +231,7 @@ To select all elements use `SelectAll()`:
 $query
     ->SelectAll()
     ->From("table")
-    ->toSql() //SELECT * FROM table
+    //SELECT * FROM table
 ```
 You can also point out a table, this might be useful in complex queries:
 ```PHP
@@ -238,24 +239,23 @@ $query
     ->SelectAll("table1")
     ->From("table1")
     ->InnerJoin("table2", "table1.id = table2.id")
-    ->toSql()
-    /*
-    SELECT table1.*
-    FROM table1
-    INNER JOIN table2 ON table1.id = table2.id
-    */
+/*
+SELECT table1.*
+FROM table1
+INNER JOIN table2 ON table1.id = table2.id
+*/
 ```
 To select a single field just use the `Select()` method. You can also specify an alias
 ```PHP
 $query
     ->Select("field")
     ->From("table")
-    ->toSql() // SELECT field FROM table
+    // SELECT field FROM table
   
 $query
     ->Select("field", "alias")
     ->From("table")
-    ->toSql() // SELECT field AS alias FROM table
+    // SELECT field AS alias FROM table
 ```
 
 You can set a distinct field with `SelectDistinct()` using the same rules as above.
@@ -265,7 +265,7 @@ You can select multiple fields also specifying aliases:
 $query
 	->Select(["field1", "field2"])
 	->From("table")
-	->toSql() // SELECT field1, field2 FROM table
+	// SELECT field1, field2 FROM table
 
 $query
     ->Select
@@ -274,7 +274,6 @@ $query
         "alias2" => "field2"
     ])
 	->From("table")
-	->toSql()
 /*
 SELECT field1 AS alias1, field2 AS alias2
 FROM table
@@ -287,7 +286,6 @@ $query
         "field2"
     ])
 	->From("table")
-	->toSql()
 /*
 SELECT field1 AS alias1, field2
 FROM table
@@ -303,7 +301,6 @@ $query
             "alias2" => ["field2", "distinct" => true]
         ])
 	->From("table")
-	->toSql()
 /*
 SELECT field1 AS alias1, DISTINCT field2 AS alias2
 FROM table
@@ -319,7 +316,7 @@ $query
     ->Select("field")
     ->From("table")
     ->Where("field", "value")
-    ->toSql() // SELECT field FROM table WHERE field = 'value'
+    // SELECT field FROM table WHERE field = 'value'
 ```
 You can also set a negative condition using `WhereNot()`
 ```PHP
@@ -327,7 +324,7 @@ $query
     ->Select("field")
     ->From("table")
     ->WhereNot("field", "value")
-    ->toSql() // SELECT field FROM table WHERE field != 'value'
+    // SELECT field FROM table WHERE field != 'value'
 ```
 Leaving only one parameter equals to state 'is null':
 ```PHP
@@ -335,7 +332,7 @@ $query
     ->Select("field")
     ->From("table")
     ->Where("field")
-    ->toSql() // SELECT field FROM table WHERE field IS NULL
+    // SELECT field FROM table WHERE field IS NULL
 ```
 Or not null:
 ```PHP
@@ -343,8 +340,9 @@ $query
     ->Select("field")
     ->From("table")
     ->WhereNot("field")
-    ->toSql() // SELECT field FROM table WHERE field IS NOT NULL
+    // SELECT field FROM table WHERE field IS NOT NULL
 ```
+
 ###### Like
 Other operations requires the parameter to be binded to the condition, like:
 ```PHP
@@ -352,7 +350,7 @@ $query
     ->Select("field")
     ->From("table")
     ->Where("field > ?", 3)
-    ->toSql() // SELECT field FROM table WHERE field > 3
+    // SELECT field FROM table WHERE field > 3
 ```
 This works for all primary operators: `=, <>, >, <, >=, <=, !=`
 
@@ -362,7 +360,7 @@ $query
     ->Select("field")
     ->From("table")
     ->Where("field LIKE %?", 'a')
-    ->toSql() // SELECT field FROM table WHERE field LIKE '%a'
+    // SELECT field FROM table WHERE field LIKE '%a'
 ```
 It works for the three cases `%?, ?%, %?%`
 
@@ -377,12 +375,11 @@ $query
     	"field BETWEEN :value AND :value2",
     	[':value' => 1, ':value2' => 2]
     )
-    ->toSql()
-    /*
-    SELECT field
-    FROM table
-    WHERE field BETWEEN 1 AND 2
-    */
+/*
+SELECT field
+FROM table
+WHERE field BETWEEN 1 AND 2
+*/
 ```
 `WhereNot()` doesn't work in these conditions.
 
@@ -397,7 +394,7 @@ $query
     	"field",
     	[1, 2, 3, 4]
     )
-    ->toSql() // SELECT field FROM table WHERE field IN (1, 2, 3, 4)
+    // SELECT field FROM table WHERE field IN (1, 2, 3, 4)
 ```
 Negative one will then be:
 ```PHP
@@ -409,9 +406,12 @@ $query
     	"field",
     	[1, 2, 3, 4]
     )
-    ->toSql() // SELECT field FROM table WHERE field NOT IN (1, 2, 3, 4)
+    // SELECT field FROM table WHERE field NOT IN (1, 2, 3, 4)
 ```
 All string parameters are automatically wrapped with single quotes, and generally all parameters' values, injected from the outside, are automatically escaped by a parser, so there shouldn't be any Sql Injection.
+
+[Index](#querybuilder)
+
 ##### Join
 The join method is quite simple, it works the same for all joins type (inner, right and left join):
 ```PHP
@@ -424,7 +424,6 @@ $query
     ->From("table1")
     ->InnerJoin("table2", "table1.id = table2.id")
     ->Where("table1.id", 2)
-    ->toSql()
 /*
 SELECT table2.*
 FROM table1
@@ -439,7 +438,6 @@ $query
     ->From("table1")
     ->InnerJoin("table2", "alias", "table1.id = table2.id")
     ->Where("table1.id", 2)
-    ->toSql()
 /*
 SELECT table2.*
 FROM table1
@@ -455,13 +453,15 @@ $query
     ->From("table1")
     ->InnerJoin("table2", "table1.id = table2.id")
     ->AndCondition("table2.id = ?", 5)
-    ->toSql()
     /*
     SELECT table2.*
     FROM table1 
     INNER JOIN table2 ON table1.id = table2.id AND table2.id = 5
     */
 ```
+
+[Index](#querybuilder)
+
 ##### Insert queries
 With insert query you can fill the db with your data. There are two ways to do that, passing data or fill by query:
 ```PHP
@@ -469,7 +469,7 @@ $builder
     ->Insert(['column1', 'column2', 'column3'])
     ->Into("table")
     ->Values(['column1' => 1, 'column2' => 2, 'column3' => 3])
-    ->toSql() // INSERT INTO table(column1,column2,column3) VALUES(1,2,3)
+    // INSERT INTO table(column1,column2,column3) VALUES(1,2,3)
 ```
 Of course the keys of the array that you pass to `Values()` must be the same in the array you pass to `Insert()`, or you'll get an exception.
 
@@ -486,8 +486,10 @@ $builder
                 ->WhereNot("field")
                 //You donì't have to call toSql() here
         )
-        ->ToSql() // INSERT INTO table(0,1,2) SELECT col1, col2, col3 FROM table2 WHERE field IS NOT NULL
+        // INSERT INTO table(0,1,2) SELECT col1, col2, col3 FROM table2 WHERE field IS NOT NULL
 ```
+
+[Index](#querybuilder)
 
 ##### Update queries
 With update queries you can set a single value:
@@ -495,14 +497,14 @@ With update queries you can set a single value:
 $builder
 	->Update("lol")
 	->Set("id", 2)
-	->toSql() // UPDATE lol SET id = 2
+	// UPDATE lol SET id = 2
  ```
  Or a set of values:
  ```PHP
 $builder
     ->Update("lol")
     ->Set(['x' => 1, 'y' => "lol"])
-    ->toSql() // UPDATE lol SET x = 1, y = 'lol'
+    // UPDATE lol SET x = 1, y = 'lol'
  ```
 
 Or you can fill a column with a query:
@@ -515,6 +517,16 @@ $builder
         'y' => $builder
                 ->SelectAll()
                 ->From("asd")
+        // you don't have to call toSql() here
     ])
-    ->toSql() // UPDATE lol SET x = 1, y = (SELECT * FROM asd)
+    // UPDATE lol SET x = 1, y = (SELECT * FROM asd)
 ```
+
+[Index](#querybuilder)
+
+##### Delete queries
+To delete from a table, use the method `DeleteFrom()` and set a Where condition if you like:
+$builder
+	->DeleteFrom("table")
+	->Where("a", 0)
+	// DELETE FROM table WHERE a = 'lol'
