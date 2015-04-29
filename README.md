@@ -147,6 +147,8 @@ $obj = MyClass::getInstance(1); //I'm the instance number 1
 
 Still work in progress, I'll update this section later.
 
+[Main index](#library)
+
 ## Exceptions Namespace (Library\\Exceptions)
 ### Classes:
   * LibraryException
@@ -173,6 +175,8 @@ Other exception classes work the same; the signature of a generic exceptions is:
 ```PHP
 public function __construct($message, $code = 0, Exception $previous = null);
 ```
+
+[Main index](#library)
 
 ## Sql Namespace (Library\\Sql)
 
@@ -714,3 +718,5 @@ SELECT * FROM table2
 This is a namespace in which I put a set of classes and function that I use around the library. This means that all the stuff in there is not meant for development, there are component used by other classes in the project.
 
 For the moment I will not keep a documentation of this namespace.
+
+[Main index](#library)
