@@ -2,6 +2,7 @@
 namespace Library\Sql\QueryBuilder;
 
 use Library\Utilities\UtilitiesService;
+use Library\Exceptions as Excs;
 
 class SqlFunctions
 {

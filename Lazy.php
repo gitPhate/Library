@@ -31,16 +31,21 @@ class Lazy
         }
         else
         {
-            throw new ArgumentException("Argument is neither a callback nor a valid class");
+            throw new Excs\ArgumentException("Argument is neither a callback nor a valid class");
         }
     }
     
     public function Value()
     {
         if($this->is_callback)
-            return $this->manager->Call();
+        {
+            return $this->manager->Call(func_get_args());
+        }
         else
-            return new $this->object();
+        {
+            $obj = new $this->object();
+            return $obj;
+        }
     }
 }
 ?>

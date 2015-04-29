@@ -1,8 +1,10 @@
 <?php
-namespace Library\Sql\QueryBuilder;
-use Library\Exceptions as Excs;
+namespace Library\Sql;
 
-class Builder
+use Library\Exceptions as Excs;
+use Library\Sql\QueryBuilder as QB;
+
+class QueryBuilder
 {
     public $table;
     
@@ -14,12 +16,12 @@ class Builder
     
     public function RawQuery($sql)
     {
-        return new RawQueryBuilder($sql);
+        return new QB\RawQueryBuilder($sql);
     }
     
     public function Select($select, $alias = null)
     {
-        $query = new SelectQuery();
+        $query = new QB\SelectQuery();
         return $query->Select($select, $alias);
     }
     
@@ -30,23 +32,23 @@ class Builder
     
     public function SelectDistinct($select, $alias = null)
     {
-        $query = new SelectQuery();
+        $query = new QB\SelectQuery();
         return $query->Select($select, $alias, true);
     }
     
     public function Insert($fields)
     {
-        return new InsertQuery($fields);
+        return new QB\InsertQuery($fields);
     }
     
     public function Update($table)
     {
-        return new UpdateQuery($table);
+        return new QB\UpdateQuery($table);
     }
     
     public function DeleteFrom($table)
     {
-        $obj = new DeleteQuery();
+        $obj = new QB\DeleteQuery();
         return $obj->From($table);
     }
 }

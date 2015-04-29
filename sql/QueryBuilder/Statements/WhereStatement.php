@@ -40,13 +40,15 @@ class WhereStatement extends BaseStatement
     {
         $buffer = "";
         
-        if(strtolower($this->operator) == "in")
+        if(preg_match("/in/i", $this->operator))
         {
-            $buffer .= "{$this->field} IN (";
+            $buffer .= "{$this->field} {$this->operator} (";
+            
             foreach($this->params as $k => $param)
             {
                 $buffer .= $param.(($k != count($this->params) - 1) ? ", " : "");
             }
+            
             $buffer .= ")";
         }
         elseif(strtolower($this->operator) == "between")

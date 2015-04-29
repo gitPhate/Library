@@ -21,9 +21,10 @@ class ParamsBinder
         foreach($matches as $k => $match)
         {
             $regex = ConditionParser::$question_mark_regex;
+            
             if(preg_match($regex, $match))
             {
-                $matches[$k] = preg_replace($regex, UtilitiesService::WrapInQuotes($value), $match);
+                $matches[$k] = UtilitiesService::WrapInQuotes(preg_replace($regex, $value, $match));
             }
         }
         

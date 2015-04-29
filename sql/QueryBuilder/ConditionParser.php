@@ -23,10 +23,10 @@ class ConditionParser
         
         $matches = array();
         
-        preg_match(self::$normal_regex, $condition, $matches);
         if(empty($matches))
         {
             preg_match(self::$like_regex, $condition, $matches);
+            
             if(empty($matches))
             {
                 preg_match(self::$between_regex, $condition, $matches);
@@ -38,7 +38,9 @@ class ConditionParser
             array_shift($matches);
         }
         
-        return self::SanitizeArray($matches);
+        $sanitizedArray = self::SanitizeArray($matches);
+        
+        return $sanitizedArray;
     }
     
     private static function ParseConditionByRegex($regex, $cond)

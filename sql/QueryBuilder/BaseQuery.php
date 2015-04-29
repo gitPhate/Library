@@ -71,6 +71,11 @@ abstract class BaseQuery
                     throw new Excs\InvalidOperationException("Invalid where clause");
                 }
                 
+                if($not)
+                {
+                    throw new Excs\InvalidOperationException("Cannot call WhereNot() in this context");
+                }
+                
                 $matches = (!is_array($params)) ? ParamsBinder::BindSingleParam($matches, $params) : $matches = ParamsBinder::BindParams($matches, $params);
                 $field = array_shift($matches);
                 $op = array_shift($matches);
@@ -86,12 +91,12 @@ abstract class BaseQuery
                 elseif(is_string($params) || is_numeric($params))
                 {
                     $field = $cond;
-                    $op = "=";
+                    $op = ($not) ? "!=" : "=";
                     $matches = array(\Library\Utilities\UtilitiesService::WrapInQuotes($params));
                 }
                 else
                 {
-                    var_dump($cond, $params, $type, $not);
+                    //var_dump($cond, $params, $type, $not);
                     throw new Excs\InvalidOperationException("Invalid where clause");
                 }
             }
@@ -187,14 +192,27 @@ abstract class BaseQuery
         
     }
     
-    public function Limit($num, $offset = null)
+    public function Limit()
     {
-        if(!is_numeric($num) || !is_numeric($offset))
+        $args = func_get_args();
+        
+        if(count($args) > 2)
         {
             throw new Excs\ArgumentException("Invalid arguments");
         }
         
-        $this->statements[] = new Statements\LimitStatement(array($num, $offset));
+        if(count($args) == 1)
+        {
+            $row_count = $args[0];
+            $offset = 0;
+        }
+        else
+        {
+            $offset = $args[0];
+            $row_count = $args[1];
+        }
+        
+        $this->statements[] = new Statements\LimitStatement($offset, $row_count);
         
         return $this;
     }

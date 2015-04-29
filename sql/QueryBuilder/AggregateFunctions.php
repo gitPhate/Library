@@ -56,7 +56,13 @@ class AggregateFunctions
     
     private static function aggregate($keyword, $column, $alias, $distinct = false)
     {
-        return $keyword."(".(($distinct) ? "DISTINCT " : "").$column.")".((!is_null($alias)) ? " AS ".$alias : "");
+        return
+            $keyword
+            ."("
+            .(($distinct) ? "DISTINCT " : "")
+            .$column
+            .")"
+            .((!is_null($alias)) ? " AS ".$alias : "");
     }
 }
 

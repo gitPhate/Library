@@ -7,29 +7,31 @@ use Library\Exceptions as Excs;
 
 class LimitStatement extends OtherStatement
 {   
-    public function __construct($fields)
+    public function __construct($offset, $row_count)
     {
-        if(!is_array($fields) && count($fields) != 2)
+        if(!is_numeric($offset) || !is_numeric($row_count) || $offset < 0 || $row_count < 0)
         {
-            throw new Excs\ArgumentException("Invalid fields");
+            throw new Excs\ArgumentException("Invalid arguments");
         }
         
-        parent::__construct($fields);
+        parent::__construct([$offset, $row_count]);
         
         $this->keyword = "LIMIT";
     }
     
     public function toSql()
     {
-        $num = $this->params[0];
-        $offset = $this->params[1];
+        $offset = $this->params[0];
+        $row_count = $this->params[1];
         
-        $buffer = $this->keyword." ".$num;
+        $buffer = $this->keyword." ";
         
-        if(!is_null($offset))
+        if($offset != 0)
         {
-            $buffer .= ", {$offset}";
+            $buffer .= "{$offset}, ";
         }
+        
+        $buffer .= $row_count;
         
         return $buffer;
     }

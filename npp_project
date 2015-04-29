@@ -41,7 +41,6 @@
                 </Folder>
                 <File name="sql\QueryBuilder\AggregateFunctions.php" />
                 <File name="sql\QueryBuilder\BaseQuery.php" />
-                <File name="sql\QueryBuilder\Builder.php" />
                 <File name="sql\QueryBuilder\ConditionParser.php" />
                 <File name="sql\QueryBuilder\DeleteQuery.php" />
                 <File name="sql\QueryBuilder\InsertQuery.php" />
@@ -54,6 +53,7 @@
             </Folder>
             <File name="sql\Database.php" />
             <File name="sql\DatabaseConfig.php" />
+            <File name="sql\QueryBuilder.php" />
         </Folder>
         <Folder name="utilities">
             <File name="utilities\CallbackManager.php" />

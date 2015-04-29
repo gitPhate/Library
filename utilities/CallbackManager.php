@@ -27,7 +27,7 @@ final class CallbackManager
 	public function Call()
 	{
 		if(empty($this->Params))
-			$this->Params = func_get_args();
+			$this->Params = func_get_args()[0];
 		
 		return call_user_func_array($this->Callback, $this->Params);
 	}

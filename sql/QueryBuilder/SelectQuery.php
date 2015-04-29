@@ -33,8 +33,24 @@ class SelectQuery extends BaseQuery
 				{
 					$k = null;
 				}
+                
+                if(is_array($v))
+                {
+                    if(!is_string($v[0]) || !is_bool($v['distinct']))
+                    {
+                        throw new Excs\ArgumentException("Invalid format of the select field");
+                    }
+                    
+                    $select = $v[0];
+                    $distinct = $v['distinct'];
+                }
+                else
+                {
+                    $select = $v;
+                    $distinct = false;
+                }
 				
-				$this->fields[] = new QueryItems\SelectField($v, $k);
+				$this->fields[] = new QueryItems\SelectField($select, $k, $distinct);
 			}
 		}
 		elseif(is_string($select) && (is_null($alias) || (!is_null($alias) && is_string($alias))))
@@ -55,6 +71,7 @@ class SelectQuery extends BaseQuery
 		$table = $args[0];
 		$alias = null;
 		$condition = $args[1];
+        $params = null;
 		
 		if(isset($args[2]))
 		{
@@ -65,7 +82,7 @@ class SelectQuery extends BaseQuery
 		return $this->Join(Enums\JoinType::Inner, $table, $alias, $condition, null);
 	}
 	
-	public function LeftJoin($table, $condition, $param = null)
+	public function LeftJoin()
 	{
 		$args = func_get_args();
 		$table = $args[0];
@@ -78,10 +95,10 @@ class SelectQuery extends BaseQuery
 			$condition = $args[2];
 		}
 		
-		return $this->Join(Enums\JoinType::Left, $table, $condition, $param);
+		return $this->Join(Enums\JoinType::Left, $table, $alias, $condition, null);
 	}
 	
-	public function RightJoin($table, $condition, $param = null)
+	public function RightJoin()
 	{
 		$args = func_get_args();
 		$table = $args[0];
@@ -94,7 +111,7 @@ class SelectQuery extends BaseQuery
 			$condition = $args[2];
 		}
 		
-		return $this->Join(Enums\JoinType::Right, $table, $condition, $param);
+		return $this->Join(Enums\JoinType::Right, $table, $alias, $condition, null);
 	}
 	
 	public function AndCondition($condition, $param = null)

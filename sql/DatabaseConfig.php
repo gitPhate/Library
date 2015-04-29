@@ -5,10 +5,10 @@ use Library\Exceptions as Excs;
 
 final class DatabaseConfig
 {
-	public $Host = "localhost";
-	public $User = "root";
-	public $Password = "";
-	public $Name = "test";
+	public $Host;
+	public $User;
+	public $Password;
+	public $Name;
 	
 	public function __construct($host, $user, $psw, $name)
 	{
