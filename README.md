@@ -202,8 +202,8 @@ These are the main functionalities:
 - [Join](#join)
 - [Insert](#insert-queries)
 - [Update](#update-queries)
-- Delete
-- SubQueries
+- [Delete](#delete-queries)
+- [SubQueries](#subqueries)
 - Having
 - Limit
 - Order By
@@ -530,3 +530,11 @@ $builder
 	->DeleteFrom("table")
 	->Where("a", 0)
 	// DELETE FROM table WHERE a = 'lol'
+	
+[Index](#querybuilder)
+
+##### SubQuries
+Still work in progress!
+
+[Index](#querybuilder)
+
