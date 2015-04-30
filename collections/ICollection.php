@@ -1,17 +1,12 @@
 <?php
-namespace Library\Collection;
+namespace Library\Collections;
 
-interface ICollection
+interface IList
 {
-    public function each(callable $c);
-    public function map(callable $c);
-    public function filter(callable $c);
-    public function first();
-    public function contains($value);
-    public function shuffle();
-    public function range($position, $offset);
-    public function any();
-    public function toArray(); //preserve keys
-    public function toList(); //drop keys and assign new numeric ones
+    public function Each($callback, $param);
+    public function Filter($callback);
+    public function Map($callback, $param);
+    public function Range($size, $from);
+    public function Shuffle();
 }
 ?>
