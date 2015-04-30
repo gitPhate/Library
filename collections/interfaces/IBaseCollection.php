@@ -1,14 +1,14 @@
 <?php
-namespace Library\Collections;
+namespace Library\Collections\Interfaces;
 
 interface IBaseCollection
 {
-    public function Add($element);
     public function Any();
     public function Clear();
-    public function Contains($element);
+    public function Count();
     public function First();
-    public function Remove($element);
+    public function Remove($value);
     public function ToArray();
+    public function ToCollection();
 }
 ?>

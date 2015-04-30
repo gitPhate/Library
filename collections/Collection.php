@@ -1,7 +1,9 @@
 <?php
 namespace Library\Collections;
 
-use Library\Exceptions as Excs;
+use Library\Collections\Interfaces\ICollection;
+use Library\Exceptions\ArgumentException;
+use Library\Exceptions\IndexOutOfRangeException;
 
 class Collection extends SimpleList implements ICollection
 {
@@ -21,7 +23,7 @@ class Collection extends SimpleList implements ICollection
     {
         if(!is_callable($callback))
         {
-            throw new Excs\ArgumentException("Invalid callback");
+            throw new ArgumentException("Invalid callback");
         }
 
         $collection = new Collection();
@@ -46,12 +48,12 @@ class Collection extends SimpleList implements ICollection
     {
         if($size < 0 || $from < 0)
         {
-            throw new Excs\ArgumentException("Size and starting index must be greater than zero");
+            throw new ArgumentException("Size and starting index must be greater than zero");
         }
         
         if($size > count($this->items) || $from > count($this->items))
         {
-            throw new Excs\IndexOutOfRangeException("Size and starting index are greater than the collection length");
+            throw new IndexOutOfRangeException("Size and starting index are greater than the collection length");
         }
         
         $array = $this->items;
@@ -85,7 +87,7 @@ class Collection extends SimpleList implements ICollection
         
         if(!is_callable($callback))
         {
-            throw new Excs\ArgumentException("Invalid callback");
+            throw new ArgumentException("Invalid callback");
         }
         
         $results = array();
@@ -99,3 +101,4 @@ class Collection extends SimpleList implements ICollection
         return $results;
     }
 }
+?>

@@ -1,5 +1,5 @@
 <?php
-namespace Library\Collections;
+namespace Library\Collections\Interfaces;
 
 interface ICollection
 {

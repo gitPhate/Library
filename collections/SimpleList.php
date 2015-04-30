@@ -1,30 +1,18 @@
 <?php
 namespace Library\Collections;
 
-use Library\Exceptions as Excs;
+use Library\Collections\Interfaces\IBaseCollection;
+use Library\Collections\Interfaces\IList;
+use Library\Exceptions\ArgumentException;
 
-class SimpleList implements IBaseCollection, \ArrayAccess
+class SimpleList extends AbstractCollection implements IList
 {
-    protected $items;
-    
     public function __construct($initialItems = null)
     {
-        if(!is_null($initialItems))
-        {
-            if(!is_array($initialItems))
-            {
-                throw new Excs\ArgumentException("Argument must be an array");
-            }
-            
-            $this->items = $initialItems;
-        }
-        else
-        {
-            $this->Clear();
-        }
+        parent::__construct($initialItems);
     }
     
-    //ICollection implementation
+    //IList implementation
     
     public function Add($element)
     {
@@ -38,16 +26,6 @@ class SimpleList implements IBaseCollection, \ArrayAccess
         }
     }
     
-    public function Any()
-    {
-        return empty($this->items);
-    }
-    
-    public function Clear()
-    {
-        $this->items = array();
-    }
-    
     public function Contains($element)
     {
         if(is_numeric($this->search_item($element)))
@@ -58,14 +36,11 @@ class SimpleList implements IBaseCollection, \ArrayAccess
         return false;
     }
     
-    public function First()
-    {
-        return $this->items[0];
-    }
+    //Inherited abstract methods
     
-    public function Remove($element)
+    public function Remove($value)
     {
-        $index = $this->search_item($element);
+        $index = $this->search_item($value);
         
         if(is_numeric($index))
         {
@@ -83,40 +58,9 @@ class SimpleList implements IBaseCollection, \ArrayAccess
         return $this->items;
     }
     
-    // ArrayAccess implementation
-    
-    public function offsetSet($offset, $value)
+    public function ToCollection()
     {
-        if (is_null($offset))
-        {
-            $this->items[] = $value;
-        }
-        else
-        {
-            $this->items[$offset] = $value;
-        }
-    }
-
-    public function offsetExists($offset)
-    {
-        return isset($this->items[$offset]);
-    }
-
-    public function offsetUnset($offset)
-    {
-        unset($this->items[$offset]);
-    }
-
-    public function offsetGet($offset)
-    {
-        return isset($this->items[$offset]) ? $this->items[$offset] : null;
-    }
-    
-    //Private methods
-    
-    private function search_item($item)
-    {
-        return array_search($item, $this->items, true);
+        return new Collection($this->items);
     }
 }
 ?>
