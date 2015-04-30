@@ -1,7 +1,7 @@
 <?php
 namespace Library\Collections;
 
-interface ICollection
+interface IBaseCollection
 {
     public function Add($element);
     public function Any();

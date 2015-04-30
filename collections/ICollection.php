@@ -1,7 +1,7 @@
 <?php
 namespace Library\Collections;
 
-interface IList
+interface ICollection
 {
     public function Each($callback, $param);
     public function Filter($callback);
