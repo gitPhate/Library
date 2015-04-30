@@ -7,9 +7,10 @@ I'll introduce myself: I'm a 20-year-old guy from Florence, Italy. I work in an 
 
 Let's start with the docs. There are some namespace, I will split docs by namespace to keep things ordered. I tried to follow the [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) standard, so they will match the directory tree.
 - [Library/](#main-namespace-library)
-  - [Collection/](#colletion-namespace-librarycollection)
-    - ICollection
+  - [Collections/](#colletion-namespace-librarycollections)
+    - SimpleList
     - Collection
+    - Dictionary
   - [Exceptions/](#exceptions-namespace-libraryexceptions)
     - [LibraryException](#libraryexception)
     - [ArgumentException](#libraryexception)
@@ -138,12 +139,11 @@ class MyClass extends Library\Singleton
 $obj = MyClass::getInstance(1); //I'm the instance number 1
 ```
 
-## Colletion Namespace (Library\\Collection)
-### Interfaces:
-  * ICollection
-
+## Colletions Namespace (Library\\Collections)
 ### Classes:
+  * SimpleList
   * Collection
+  * Dictionary
 
 Still work in progress, I'll update this section later.
 
