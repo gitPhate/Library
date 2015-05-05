@@ -25,7 +25,7 @@ abstract class AbstractCollection implements IBaseCollection, \ArrayAccess
         }
     }
     
-    //ICollection implementation
+    //IBaseCollection implementation
     
     public function Any()
     {
