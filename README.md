@@ -208,8 +208,39 @@ public array ToCollection();
 Returns the elements of the list as an instance of the Collection class. See below for an API reference of this class. This method is overridden from the AbstractCollection class.
 
 #### Collection
-The collection class is an advanced collection. It inherits from SimpleList and adds functionalities to a normal list.
+The collection class is an advanced collection. It inherits from SimpleList and adds functionalities to a normal list. All method are defined in the `ICollection` interface:
+* `Each($callback, $param)`
+* `Filter($callback)`
+* `Map($callback, $param = null)`
+* `Range($size, $from = null)`
+* `Shuffle()`
 
+```PHP
+public void Each(callable $callback, array $param = null);
+```
+The `Each()` method applies a callback on every element of the collection. It modifies the internal data set directly, thus it has no return value. You can pass parameters to the callback by creating an array and pass it as the second parameter.
+In order to edit data, your callback can return a value, which will be set as the current item in the collection. Moreover, it can accept two parameters, the key and the value of the current element. An example:
+```PHP
+include("Library\autoload.php");
+
+use Library\Collections\Collection;
+
+$list = new Collection([1, 2, 3, 4, 5]);
+
+$list->Each(function ($key, $value) {
+   return $value + 1;
+});
+
+var_dump(
+	$list->ToArray()
+);
+// prints [2, 3, 4, 5, 6]
+```
+
+```PHP
+public void Filter(callable $callback);
+```
+The `Filter()` method creates a new collection comparing each element with a callback. The element will be included in the new collection if it fits the criteria.
 
 [Main index](#library)
 
