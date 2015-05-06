@@ -215,8 +215,10 @@ The collection class is an advanced collection. It inherits from SimpleList and 
 * `Range($size, $from = null)`
 * `Shuffle()`
 
+##### Each
+
 ```PHP
-public void Each(callable $callback, array $param = null);
+public void Each(callable $callback, [mixed $param1, mixed $param2, ...]);
 ```
 The `Each()` method applies a callback on every element of the collection. It modifies the internal data set directly, thus it has no return value. You can pass parameters to the callback by passing parameters to `Each()`.
 In order to edit data, your callback can return a value, which will be set as the current item in the collection. Moreover, it can accept two parameters, the key and the value of the current element. Examples:
@@ -244,10 +246,43 @@ var_dump($list->ToArray());
 // prints [4, 5, 6, 7, 8]
 ```
 
+##### Filter
+
 ```PHP
 public void Filter(callable $callback);
 ```
 The `Filter()` method creates a new collection comparing each element with a callback. The element will be included in the new collection if it fits the criteria.
+
+```PHP
+$list = new Collection([1, 2, 3, 4]);
+$newList = $list->Filter(function ($key, $value) {
+	return $value % 2 == 0;
+});
+
+var_dump($newList->ToArray()); // prints [2, 4]
+```
+
+##### Map
+```PHP
+public Collection Map(callable $callback, [mixed $param1, mixed $param2, ...]);
+```
+`Map()` acts the same as `Each()`, with the only difference that returns a new `Collection` object instead of editing internal data.
+
+##### Range
+```PHP
+public Collection Range(int $size, [int $from = null]);
+```
+`Range()` slices the collection and return a new `Collection` object with the number of elements indicated from `$size`, starting from `$from` if set, from the beginning otherwise. The first element is in position zero, and if `$from` is set the element in the position `$from` will be included in the new collection.
+```PHP
+use Library\Collections\Collection;
+
+$list = new Collection([1, 2, 3, 4]);
+$newList1 = $list->Range(2);
+$newList2 = $list->Range(2, 2);
+
+var_dump($newList1->ToArray()); // prints [1, 2]
+var_dump($newList2->ToArray()); // prints [3, 4]
+```
 
 [Main index](#library)
 
