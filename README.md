@@ -7,10 +7,11 @@ I'll introduce myself: I'm a 20-year-old guy from Florence, Italy. I work in an 
 
 Let's start with the docs. There are some namespace, I will split docs by namespace to keep things ordered. I tried to follow the [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) standard, so they will match the directory tree.
 - [Library/](#main-namespace-library)
-  - [Collections/](#colletion-namespace-librarycollections)
-    - SimpleList
+  - [Collections/](#colletions-namespace-librarycollections)
+    - [SimpleList](#simplelist)
     - Collection
     - Dictionary
+    - Tuple
   - [Exceptions/](#exceptions-namespace-libraryexceptions)
     - [LibraryException](#libraryexception)
     - [ArgumentException](#libraryexception)
@@ -144,9 +145,62 @@ $obj = MyClass::getInstance(1); //I'm the instance number 1
   * SimpleList
   * Collection
   * Dictionary
+  * Tuple
 
-Still work in progress, I'll update this section later.
+Some classes are built upon their abstract one, and they implement some interfaces. They are built on this hierarchy:
+- `AbstractCollection implements IBaseCollection, \ArrayAccess`
+	- `SimpleList extends AbstractCollection implements IList`
+		- `Collection extends SimpleList implements ICollection`
+	- `Dictionary extends AbstractCollection implements IDictionary`
 
+#### SimpleList
+SimpleList is a class that represents a list. It has the basic method of a list, here's a complete reference:
+* Add($element) - *defined in IList*
+* Any() - *Inherited from AbstractCollection*
+* Clear() - *Inherited from AbstractCollection*
+* Contains($element) - *defined in IList*
+* Count() - *Inherited from AbstractCollection*
+* First() - *Inherited from AbstractCollection*
+* Remove($value) - *Overridden from AbstractCollection*
+* ToArray() - *Overridden from AbstractCollection*
+* ToCollection() - *Overridden from AbstractCollection*
+
+```PHP
+public void Add(mixed $element);
+```
+Adds an element or an array of elements to the list.
+```PHP
+public bool Any();
+```
+Returns true if the list is not empty, false otherwise.
+```PHP
+public void Clear();
+```
+Resets the internal data container, wiping all data from the list.
+```PHP
+public bool Contains($element);
+```
+Checks whether an element is contained in the list and returns true if it is found, false otherwise.
+```PHP
+public int Count();
+```
+Returns the number of elements contained in the list.
+```PHP
+public mixed First();
+```
+Returns the first element of the list.
+```PHP
+public mixed Remove(mixed $value);
+```
+Removes the element from the list. This method is overridden from the AbstractCollection class.
+```PHP
+public array ToArray();
+```
+Returns the elements of the list as an array. This method is overridden from the AbstractCollection class.
+```PHP
+public array ToCollection();
+```
+Returns the elements of the list as an instance of the Collection class. See below for an API reference of this class. This method is overridden from the AbstractCollection class.
 [Main index](#library)
 
 ## Exceptions Namespace (Library\\Exceptions)
@@ -173,7 +227,7 @@ Library\Sql\QueryBuilder\BaseQuery.Where(index.php:5)
 
 Other exception classes work the same; the signature of a generic exceptions is:
 ```PHP
-public function __construct($message, $code = 0, Exception $previous = null);
+public function __construct(string $message, int $code = 0, Exception $previous = null);
 ```
 
 [Main index](#library)
