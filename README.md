@@ -155,16 +155,21 @@ Some classes are built upon their abstract one, and they implement some interfac
 
 #### SimpleList
 SimpleList is a class that represents a list. It has the basic method of a list, here's a complete reference:
-* Add($element) - *defined in IList*
-* Any() - *Inherited from AbstractCollection*
-* Clear() - *Inherited from AbstractCollection*
-* Contains($element) - *defined in IList*
-* Count() - *Inherited from AbstractCollection*
-* First() - *Inherited from AbstractCollection*
-* Remove($value) - *Overridden from AbstractCollection*
-* ToArray() - *Overridden from AbstractCollection*
-* ToCollection() - *Overridden from AbstractCollection*
+* `__construct($initialItems = null)`
+* `Add($element)` - *defined in IList*
+* `Any()` - *Inherited from AbstractCollection*
+* `Clear()` - *Inherited from AbstractCollection*
+* `Contains($element)` - *defined in IList*
+* `Count()` - *Inherited from AbstractCollection*
+* `First()` - *Inherited from AbstractCollection*
+* `Remove($value)` - *Overridden from AbstractCollection*
+* `ToArray()` - *Overridden from AbstractCollection*
+* `ToCollection()` - *Overridden from AbstractCollection*
 
+```PHP
+public void __construct(array $initialItems = null);
+```
+Constructor of the class. It can accepts an array to be inserted in the list.
 ```PHP
 public void Add(mixed $element);
 ```
@@ -201,6 +206,11 @@ Returns the elements of the list as an array. This method is overridden from the
 public array ToCollection();
 ```
 Returns the elements of the list as an instance of the Collection class. See below for an API reference of this class. This method is overridden from the AbstractCollection class.
+
+#### Collection
+The collection class is an advanced collection. It inherits from SimpleList and adds functionalities to a normal list.
+
+
 [Main index](#library)
 
 ## Exceptions Namespace (Library\\Exceptions)
