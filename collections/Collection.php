@@ -14,9 +14,12 @@ class Collection extends SimpleList implements ICollection
     
     //ICollection implementation
     
-    public function Each($callback, $param = null)
+    public function Each($callback)
     {
-        $this->items = $this->ApplyCallback($callback, $param);
+        $args = func_get_args();
+        $callback = array_shift($args);
+        
+        $this->items = $this->ApplyCallback($callback, $args);
     }
     
     public function Filter($callback)
@@ -39,9 +42,12 @@ class Collection extends SimpleList implements ICollection
         return $collection;
     }
     
-    public function Map($callback, $param = null)
+    public function Map($callback)
     {
-        return new Collection($this->ApplyCallback($callback, $param));
+        $args = func_get_args();
+        $callback = array_shift($args);
+        
+        return new Collection($this->ApplyCallback($callback, $args));
     }
     
     public function Range($size, $from = null)
@@ -80,11 +86,8 @@ class Collection extends SimpleList implements ICollection
         return array_diff($array, array_slice($array, $size));
     }
     
-    private function ApplyCallback()
+    private function ApplyCallback($callback, $args)
     {
-        $args = func_get_args();
-        $callback = array_shift($args);
-        
         if(!is_callable($callback))
         {
             throw new ArgumentException("Invalid callback");
