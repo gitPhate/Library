@@ -218,8 +218,8 @@ The collection class is an advanced collection. It inherits from SimpleList and 
 ```PHP
 public void Each(callable $callback, array $param = null);
 ```
-The `Each()` method applies a callback on every element of the collection. It modifies the internal data set directly, thus it has no return value. You can pass parameters to the callback by creating an array and pass it as the second parameter.
-In order to edit data, your callback can return a value, which will be set as the current item in the collection. Moreover, it can accept two parameters, the key and the value of the current element. An example:
+The `Each()` method applies a callback on every element of the collection. It modifies the internal data set directly, thus it has no return value. You can pass parameters to the callback by passing parameters to `Each()`.
+In order to edit data, your callback can return a value, which will be set as the current item in the collection. Moreover, it can accept two parameters, the key and the value of the current element. Examples:
 ```PHP
 include("Library\autoload.php");
 
@@ -235,6 +235,13 @@ var_dump(
 	$list->ToArray()
 );
 // prints [2, 3, 4, 5, 6]
+
+$list->Each(function ($key, $value, $number1, $number2) {
+   return $value + $number1 + $number2;
+}, 1, 1);
+
+var_dump($list->ToArray());
+// prints [4, 5, 6, 7, 8]
 ```
 
 ```PHP
