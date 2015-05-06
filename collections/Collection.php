@@ -12,7 +12,7 @@ class Collection extends SimpleList implements ICollection
         parent::__construct($initialItems);
     }
     
-    //IList implementation
+    //ICollection implementation
     
     public function Each($callback, $param = null)
     {
