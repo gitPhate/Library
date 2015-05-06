@@ -1,5 +1,0 @@
-- Paginator
-- Observer Pattern
-- Loader per le classi
-- classe Collection
-- MVC
