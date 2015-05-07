@@ -140,7 +140,16 @@ class MyClass extends Library\Singleton
 $obj = MyClass::getInstance(1); //I'm the instance number 1
 ```
 
+<<<<<<< HEAD
 ## Colletions Namespace (Library\\Collections)
+=======
+[Main index](#library)
+
+## Colletion Namespace (Library\\Collection)
+### Interfaces:
+  * ICollection
+
+>>>>>>> master
 ### Classes:
   * SimpleList
   * Collection
