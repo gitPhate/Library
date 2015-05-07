@@ -4,6 +4,8 @@ namespace Library\Collections;
 use Library\Collections\Interfaces\ICollection;
 use Library\Exceptions\ArgumentException;
 use Library\Exceptions\IndexOutOfRangeException;
+use Library\Utilities\UtilitiesService;
+
 
 class Collection extends SimpleList implements ICollection
 {
@@ -22,21 +24,49 @@ class Collection extends SimpleList implements ICollection
         $this->items = $this->ApplyCallback($callback, $args);
     }
     
-    public function Filter($callback)
+    public function Filter($callback, $mode = \FilterMode::Values)
     {
         if(!is_callable($callback))
         {
             throw new ArgumentException("Invalid callback");
         }
+        
+        if(!\FilterMode::isValidValue($mode))
+        {
+            throw new ArgumentException("Invalid filter mode");
+        }
 
         $collection = new Collection();
         
-        foreach($this->items as $k => $v)
+        switch($mode)
         {
-            if($callback($k, $v))
-            {
-                $collection->Add($v);
-            }
+            case \FilterMode::Keys:
+                foreach($this->items as $k => $v)
+                {
+                    if($callback($k))
+                    {
+                        $collection->Add($v);
+                    }
+                }
+            break;
+            case \FilterMode::Values:
+                foreach($this->items as $v)
+                {
+                    if($callback($v))
+                    {
+                        $collection->Add($v);
+                    }
+                }
+            break;
+            case \FilterMode::Both:
+                foreach($this->items as $k => $v)
+                {
+                    if($callback($k, $v))
+                    {
+                        $collection->Add($v);
+                    }
+                }
+            break;
         }
         
         return $collection;
@@ -109,4 +139,6 @@ class Collection extends SimpleList implements ICollection
         return $results;
     }
 }
+
+require_once("Library\Collections\FilterMode.php");
 ?>
