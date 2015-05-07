@@ -44,7 +44,7 @@ It's an attempt to use enumerations in PHP. It's not mine, I found it here: http
 
 Here's a rapid example:
 ```PHP
-abstract class DaysOfWeek extends BasicEnum {
+abstract class DaysOfWeek extends BaseEnum {
     const Sunday = 0;
     const Monday = 1;
     const Tuesday = 2;
@@ -259,15 +259,22 @@ var_dump($list->ToArray());
 ```PHP
 public void Filter(callable $callback);
 ```
-The `Filter()` method creates a new collection comparing each element with a callback. The element will be included in the new collection if it fits the criteria.
+The `Filter()` method creates a new collection comparing each element with a callback. The element will be included in the new collection if it fits the criteria. You can choose to use only keys or both keys and values in your callback by passing a value of the FilterMode enum as second parameter. The FilterMode enum is loaded with Collection class, it has `Keys`, `Values` and `Both`.
+The default is only values. Examples:
 
 ```PHP
 $list = new Collection([1, 2, 3, 4]);
-$newList = $list->Filter(function ($key, $value) {
+$newList = $list->Filter(function ($value) {
 	return $value % 2 == 0;
 });
 
 var_dump($newList->ToArray()); // prints [2, 4]
+
+$newList = $list->Filter(function ($key, $value) {
+	return $value % 2 == 0 && $key > 1;
+}, FilterMode::Both);
+
+var_dump($newList->ToArray()); // prints [4]
 ```
 
 ##### Map
