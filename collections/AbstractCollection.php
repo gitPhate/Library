@@ -25,7 +25,7 @@ abstract class AbstractCollection implements IBaseCollection, \ArrayAccess
         }
     }
     
-    //ICollection implementation
+    //IBaseCollection implementation
     
     public function Any()
     {
@@ -45,6 +45,11 @@ abstract class AbstractCollection implements IBaseCollection, \ArrayAccess
     public function First()
     {
         return $this->items[0];
+    }
+    
+    public function IndexOf($element)
+    {
+        return $this->search_item($element);
     }
     
     public abstract function Remove($value);

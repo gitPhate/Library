@@ -7,9 +7,11 @@ I'll introduce myself: I'm a 20-year-old guy from Florence, Italy. I work in an 
 
 Let's start with the docs. There are some namespace, I will split docs by namespace to keep things ordered. I tried to follow the [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) standard, so they will match the directory tree.
 - [Library/](#main-namespace-library)
-  - [Collection/](#colletion-namespace-librarycollection)
-    - ICollection
-    - Collection
+  - [Collections/](#colletions-namespace-librarycollections)
+    - [SimpleList](#simplelist)
+    - [Collection](#collection)
+    - [Dictionary](#dictionary)
+    - [Tuple](#tuple)
   - [Exceptions/](#exceptions-namespace-libraryexceptions)
     - [LibraryException](#libraryexception)
     - [ArgumentException](#libraryexception)
@@ -42,7 +44,7 @@ It's an attempt to use enumerations in PHP. It's not mine, I found it here: http
 
 Here's a rapid example:
 ```PHP
-abstract class DaysOfWeek extends BasicEnum {
+abstract class DaysOfWeek extends BaseEnum {
     const Sunday = 0;
     const Monday = 1;
     const Tuesday = 2;
@@ -138,16 +140,226 @@ class MyClass extends Library\Singleton
 $obj = MyClass::getInstance(1); //I'm the instance number 1
 ```
 
+<<<<<<< HEAD
+## Colletions Namespace (Library\\Collections)
+=======
 [Main index](#library)
 
 ## Colletion Namespace (Library\\Collection)
 ### Interfaces:
   * ICollection
 
+>>>>>>> master
 ### Classes:
+  * SimpleList
   * Collection
+  * Dictionary
+  * Tuple
 
-Still work in progress, I'll update this section later.
+Some classes are built upon their abstract one, and they implement some interfaces. They are built on this hierarchy:
+- `AbstractCollection implements IBaseCollection, \ArrayAccess`
+	- `SimpleList extends AbstractCollection implements IList`
+		- `Collection extends SimpleList implements ICollection`
+	- `Dictionary extends AbstractCollection implements IDictionary`
+
+#### SimpleList
+SimpleList is a class that represents a list. It has the basic method of a list, here's a complete reference:
+* `__construct($initialItems = null)`
+* `Add($element)` - *defined in IList*
+* `Any()` - *Inherited from AbstractCollection*
+* `Clear()` - *Inherited from AbstractCollection*
+* `Contains($element)` - *defined in IList*
+* `Count()` - *Inherited from AbstractCollection*
+* `First()` - *Inherited from AbstractCollection*
+* `Remove($value)` - *Overridden from AbstractCollection*
+* `ToArray()` - *Overridden from AbstractCollection*
+* `ToCollection()` - *Overridden from AbstractCollection*
+
+```PHP
+public void __construct(array $initialItems = null);
+```
+Constructor of the class. It can accepts an array to be inserted in the list.
+```PHP
+public void Add(mixed $element);
+```
+Adds an element or an array of elements to the list.
+```PHP
+public bool Any();
+```
+Returns true if the list is not empty, false otherwise.
+```PHP
+public void Clear();
+```
+Resets the internal data container, wiping all data from the list.
+```PHP
+public bool Contains($element);
+```
+Checks whether an element is contained in the list and returns true if it is found, false otherwise.
+```PHP
+public int Count();
+```
+Returns the number of elements contained in the list.
+```PHP
+public mixed First();
+```
+Returns the first element of the list.
+```PHP
+public mixed Remove(mixed $value);
+```
+Removes the element from the list. This method is overridden from the AbstractCollection class.
+```PHP
+public array ToArray();
+```
+Returns the elements of the list as an array. This method is overridden from the AbstractCollection class.
+```PHP
+public array ToCollection();
+```
+Returns the elements of the list as an instance of the Collection class. See below for an API reference of this class. This method is overridden from the AbstractCollection class.
+
+#### Collection
+The collection class is an advanced collection. It inherits from SimpleList and adds functionalities to a normal list. All method are defined in the `ICollection` interface:
+* `__construct($initialItems = null)`
+* `Each($callback, $param)`
+* `Filter($callback)`
+* `Map($callback, $param = null)`
+* `Range($size, $from = null)`
+* `Shuffle()`
+
+##### Ctor
+
+```PHP
+public void __construct(array $initialItems = null);
+```
+Constructor of the class. It can accepts an array to be inserted in the list.
+
+##### Each
+
+```PHP
+public void Each(callable $callback, [mixed $param1, mixed $param2, ...]);
+```
+The `Each()` method applies a callback on every element of the collection. It modifies the internal data set directly, thus it has no return value. You can pass parameters to the callback by passing parameters to `Each()`.
+In order to edit data, your callback can return a value, which will be set as the current item in the collection. Moreover, it can accept two parameters, the key and the value of the current element. Examples:
+```PHP
+include("Library\autoload.php");
+
+use Library\Collections\Collection;
+
+$list = new Collection([1, 2, 3, 4, 5]);
+
+$list->Each(function ($key, $value) {
+   return $value + 1;
+});
+
+var_dump(
+	$list->ToArray()
+);
+// prints [2, 3, 4, 5, 6]
+
+$list->Each(function ($key, $value, $number1, $number2) {
+   return $value + $number1 + $number2;
+}, 1, 1);
+
+var_dump($list->ToArray());
+// prints [4, 5, 6, 7, 8]
+```
+
+##### Filter
+
+```PHP
+public void Filter(callable $callback);
+```
+The `Filter()` method creates a new collection comparing each element with a callback. The element will be included in the new collection if it fits the criteria. You can choose to use only keys or both keys and values in your callback by passing a value of the FilterMode enum as second parameter. The FilterMode enum is loaded with Collection class, it has `Keys`, `Values` and `Both`.
+The default is only values. Examples:
+
+```PHP
+$list = new Collection([1, 2, 3, 4]);
+$newList = $list->Filter(function ($value) {
+	return $value % 2 == 0;
+});
+
+var_dump($newList->ToArray()); // prints [2, 4]
+
+$newList = $list->Filter(function ($key, $value) {
+	return $value % 2 == 0 && $key > 1;
+}, FilterMode::Both);
+
+var_dump($newList->ToArray()); // prints [4]
+```
+
+##### Map
+```PHP
+public Collection Map(callable $callback, [mixed $param1, mixed $param2, ...]);
+```
+`Map()` acts the same as `Each()`, with the only difference that returns a new `Collection` object instead of editing internal data.
+
+##### Range
+```PHP
+public Collection Range(int $size, [int $from = null]);
+```
+`Range()` slices the collection and return a new `Collection` object with the number of elements indicated from `$size`, starting from `$from` if set, from the beginning otherwise. The first element is in position zero, and if `$from` is set the element in the position `$from` will be included in the new collection.
+```PHP
+use Library\Collections\Collection;
+
+$list = new Collection([1, 2, 3, 4]);
+$newList1 = $list->Range(2);
+$newList2 = $list->Range(2, 2);
+
+var_dump($newList1->ToArray()); // prints [1, 2]
+var_dump($newList2->ToArray()); // prints [3, 4]
+```
+
+##### Shuffle
+```PHP
+public void Shuffle();
+```
+Shuffles the internal elements of the collection. 
+
+#### Dictionary
+Dictionary is a basic dictionary class. It inherits from AbstractCollection, the same base class as SimpleList, so it will have the same methods as SimpleList. It also implements IDictionary interfaces, and this is its API:
+
+* `__construct()`
+* `Add($key, $value)`
+* `ContainsKey($key)`
+* `Keys()`
+* `Values()`
+
+```PHP
+public void __construct();
+```
+Initialize the dictionary.
+
+```PHP
+public void Add(mixed $key, mixed $value);
+```
+Adds the element at the specific key. It throws an exception if there is already an element with the indicated key.
+```PHP
+public void ContainsKey(mixed $key);
+```
+Checks whether an element with the key `$key` already exists. If so, it returns true, otherwise it will return false.
+```PHP
+public void Keys();
+```
+Returns a new instance of the Collection class with all the keys in the dictionary.
+```PHP
+public void Values();
+```
+Returns a new instance of the Collection class with all the values in the dictionary.
+
+#### Tuple
+The Tuple class can relate some items and carry them togeher. For example, a dictionary's key-value pair can perfectly be a tuple. 
+It can hold up to 8 elements; in order to set more you need to create a new tuple class and put it in position 8. This way you'll be able to hold infinite elements.
+To get the value of an element just refer to Itemx, where x is the position. Let's see some examples:
+```PHP
+use Library\Collections as C;
+
+$tuple = new C\Tuple(1, 2, 3, 4);
+
+echo $tuple->Item2; // 2
+
+$tuple = new C\Tuple(1, 2, 3, 4, 5, 6, 7, new C\Tuple(8, 9, 10));
+
+echo $tuple->Item8->Item1; // 8
+```
 
 [Main index](#library)
 
@@ -175,7 +387,7 @@ Library\Sql\QueryBuilder\BaseQuery.Where(index.php:5)
 
 Other exception classes work the same; the signature of a generic exceptions is:
 ```PHP
-public function __construct($message, $code = 0, Exception $previous = null);
+public function __construct(string $message, int $code = 0, Exception $previous = null);
 ```
 
 [Main index](#library)

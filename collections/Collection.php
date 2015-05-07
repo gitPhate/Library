@@ -4,6 +4,8 @@ namespace Library\Collections;
 use Library\Collections\Interfaces\ICollection;
 use Library\Exceptions\ArgumentException;
 use Library\Exceptions\IndexOutOfRangeException;
+use Library\Utilities\UtilitiesService;
+
 
 class Collection extends SimpleList implements ICollection
 {
@@ -12,36 +14,70 @@ class Collection extends SimpleList implements ICollection
         parent::__construct($initialItems);
     }
     
-    //IList implementation
+    //ICollection implementation
     
-    public function Each($callback, $param = null)
+    public function Each($callback)
     {
-        $this->items = $this->ApplyCallback($callback, $param);
+        $args = func_get_args();
+        $callback = array_shift($args);
+        
+        $this->items = $this->ApplyCallback($callback, $args);
     }
     
-    public function Filter($callback)
+    public function Filter($callback, $mode = \FilterMode::Values)
     {
         if(!is_callable($callback))
         {
             throw new ArgumentException("Invalid callback");
         }
+        
+        if(!\FilterMode::isValidValue($mode))
+        {
+            throw new ArgumentException("Invalid filter mode");
+        }
 
         $collection = new Collection();
         
-        foreach($this->items as $k => $v)
+        switch($mode)
         {
-            if($callback($k, $v))
-            {
-                $collection->Add($v);
-            }
+            case \FilterMode::Keys:
+                foreach($this->items as $k => $v)
+                {
+                    if($callback($k))
+                    {
+                        $collection->Add($v);
+                    }
+                }
+            break;
+            case \FilterMode::Values:
+                foreach($this->items as $v)
+                {
+                    if($callback($v))
+                    {
+                        $collection->Add($v);
+                    }
+                }
+            break;
+            case \FilterMode::Both:
+                foreach($this->items as $k => $v)
+                {
+                    if($callback($k, $v))
+                    {
+                        $collection->Add($v);
+                    }
+                }
+            break;
         }
         
         return $collection;
     }
     
-    public function Map($callback, $param = null)
+    public function Map($callback)
     {
-        return new Collection($this->ApplyCallback($callback, $param));
+        $args = func_get_args();
+        $callback = array_shift($args);
+        
+        return new Collection($this->ApplyCallback($callback, $args));
     }
     
     public function Range($size, $from = null)
@@ -54,6 +90,11 @@ class Collection extends SimpleList implements ICollection
         if($size > count($this->items) || $from > count($this->items))
         {
             throw new IndexOutOfRangeException("Size and starting index are greater than the collection length");
+        }
+        
+        if(($size + $from) > $this->Count())
+        {
+            throw new IndexOutOfRangeException("The range you're trying to extract is out of the collection range.");
         }
         
         $array = $this->items;
@@ -80,11 +121,8 @@ class Collection extends SimpleList implements ICollection
         return array_diff($array, array_slice($array, $size));
     }
     
-    private function ApplyCallback()
+    private function ApplyCallback($callback, $args)
     {
-        $args = func_get_args();
-        $callback = array_shift($args);
-        
         if(!is_callable($callback))
         {
             throw new ArgumentException("Invalid callback");
@@ -101,4 +139,6 @@ class Collection extends SimpleList implements ICollection
         return $results;
     }
 }
+
+require_once("Library\Collections\FilterMode.php");
 ?>
