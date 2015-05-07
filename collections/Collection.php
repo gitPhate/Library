@@ -62,6 +62,11 @@ class Collection extends SimpleList implements ICollection
             throw new IndexOutOfRangeException("Size and starting index are greater than the collection length");
         }
         
+        if(($size + $from) > $this->Count())
+        {
+            throw new IndexOutOfRangeException("The range you're trying to extract is out of the collection range.");
+        }
+        
         $array = $this->items;
         
         if(!is_null($from))
