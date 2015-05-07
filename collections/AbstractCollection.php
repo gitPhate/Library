@@ -47,6 +47,11 @@ abstract class AbstractCollection implements IBaseCollection, \ArrayAccess
         return $this->items[0];
     }
     
+    public function IndexOf($element)
+    {
+        return $this->search_item($element);
+    }
+    
     public abstract function Remove($value);
     
     public abstract function ToArray();
