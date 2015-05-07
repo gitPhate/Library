@@ -9,7 +9,7 @@ Let's start with the docs. There are some namespace, I will split docs by namesp
 - [Library/](#main-namespace-library)
   - [Collections/](#colletions-namespace-librarycollections)
     - [SimpleList](#simplelist)
-    - Collection
+    - [Collection](#collection)
     - Dictionary
     - Tuple
   - [Exceptions/](#exceptions-namespace-libraryexceptions)
@@ -209,11 +209,19 @@ Returns the elements of the list as an instance of the Collection class. See bel
 
 #### Collection
 The collection class is an advanced collection. It inherits from SimpleList and adds functionalities to a normal list. All method are defined in the `ICollection` interface:
+* `__construct($initialItems = null)`
 * `Each($callback, $param)`
 * `Filter($callback)`
 * `Map($callback, $param = null)`
 * `Range($size, $from = null)`
 * `Shuffle()`
+
+##### Ctor
+
+```PHP
+public void __construct(array $initialItems = null);
+```
+Constructor of the class. It can accepts an array to be inserted in the list.
 
 ##### Each
 
@@ -284,6 +292,12 @@ var_dump($newList1->ToArray()); // prints [1, 2]
 var_dump($newList2->ToArray()); // prints [3, 4]
 ```
 
+##### Shuffle
+```PHP
+public void Shuffle();
+```
+Shuffles the internal elements of the collection. 
+
 [Main index](#library)
 
 ## Exceptions Namespace (Library\\Exceptions)
@@ -292,6 +306,53 @@ var_dump($newList2->ToArray()); // prints [3, 4]
   * ArgumentException
   * InvalidOperationException
   * NotFoundException
+
+#### Dictionary
+Dictionary is a basic dictionary class. It inherits from AbstractCollection, the same base class as SimpleList, so it will have the same methods as SimpleList. It also implements IDictionary interfaces, and this is its API:
+
+* `__construct()`
+* `Add($key, $value)`
+* `ContainsKey($key)`
+* `Keys()`
+* `Values()`
+
+```PHP
+public void __construct();
+```
+Initialize the dictionary.
+
+```PHP
+public void Add(mixed $key, mixed $value);
+```
+Adds the element at the specific key. It throws an exception if there is already an element with the indicated key.
+```PHP
+public void ContainsKey(mixed $key);
+```
+Checks whether an element with the key `$key` already exists. If so, it returns true, otherwise it will return false.
+```PHP
+public void Keys();
+```
+Returns a new instance of the Collection class with all the keys in the dictionary.
+```PHP
+public void Values();
+```
+Returns a new instance of the Collection class with all the values in the dictionary.
+
+#### Tuple
+The Tuple class can relate some items and carry them togeher. For example, a dictionary's key-value pair can perfectly be a tuple. 
+It can hold up to 8 elements; in order to set more you need to create a new tuple class and put it in position 8. This way you'll be able to hold infinite elements.
+To get the value of an element just refer to Itemx, where x is the position. Let's see some examples:
+```PHP
+use Library\Collections as C;
+
+$tuple = new C\Tuple(1, 2, 3, 4);
+
+echo $tuple->Item2; // 2
+
+$tuple = new C\Tuple(1, 2, 3, 4, 5, 6, 7, new C\Tuple(8, 9, 10));
+
+echo $tuple->Item8->Item1; // 8
+```
 
 #### LibraryException
 It's the library's base exception. It provides a small stack trace and a custom message to be thrown along with it.
