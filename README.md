@@ -10,8 +10,8 @@ Let's start with the docs. There are some namespace, I will split docs by namesp
   - [Collections/](#colletions-namespace-librarycollections)
     - [SimpleList](#simplelist)
     - [Collection](#collection)
-    - Dictionary
-    - Tuple
+    - [Dictionary](#dictionary)
+    - [Tuple](#tuple)
   - [Exceptions/](#exceptions-namespace-libraryexceptions)
     - [LibraryException](#libraryexception)
     - [ArgumentException](#libraryexception)
@@ -298,15 +298,6 @@ public void Shuffle();
 ```
 Shuffles the internal elements of the collection. 
 
-[Main index](#library)
-
-## Exceptions Namespace (Library\\Exceptions)
-### Classes:
-  * LibraryException
-  * ArgumentException
-  * InvalidOperationException
-  * NotFoundException
-
 #### Dictionary
 Dictionary is a basic dictionary class. It inherits from AbstractCollection, the same base class as SimpleList, so it will have the same methods as SimpleList. It also implements IDictionary interfaces, and this is its API:
 
@@ -353,6 +344,15 @@ $tuple = new C\Tuple(1, 2, 3, 4, 5, 6, 7, new C\Tuple(8, 9, 10));
 
 echo $tuple->Item8->Item1; // 8
 ```
+
+[Main index](#library)
+
+## Exceptions Namespace (Library\\Exceptions)
+### Classes:
+  * LibraryException
+  * ArgumentException
+  * InvalidOperationException
+  * NotFoundException
 
 #### LibraryException
 It's the library's base exception. It provides a small stack trace and a custom message to be thrown along with it.
