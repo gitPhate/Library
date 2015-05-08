@@ -170,7 +170,7 @@ SimpleList is a class that represents a list. It has the basic method of a list,
 * `Clear()` - *Inherited from AbstractCollection*
 * `Contains($element)` - *defined in IList*
 * `Count()` - *Inherited from AbstractCollection*
-* `First()` - *Inherited from AbstractCollection*
+* `First()` - *Overridden from AbstractCollection*
 * `IndexOf($element)` - *Inherited from AbstractCollection*
 * `Remove($value)` - *Overridden from AbstractCollection*
 * `ToArray()` - *Overridden from AbstractCollection*
@@ -325,6 +325,7 @@ Dictionary is a basic dictionary class. It inherits from AbstractCollection, the
 * `__construct()`
 * `Add($key, $value)`
 * `ContainsKey($key)`
+* `First()`
 * `Keys()`
 * `Values()`
 
@@ -341,6 +342,10 @@ Adds the element at the specific key. It throws an exception if there is already
 public void ContainsKey(mixed $key);
 ```
 Checks whether an element with the key `$key` already exists. If so, it returns true, otherwise it will return false.
+```PHP
+public Tuple First();
+```
+Returns the first element of the list as a Tuple with the key as the Item1 and the value as the Item2.
 ```PHP
 public void Keys();
 ```
