@@ -42,10 +42,7 @@ abstract class AbstractCollection implements IBaseCollection, \ArrayAccess
         return count($this->items);
     }
     
-    public function First()
-    {
-        return $this->items[0];
-    }
+    public abstract function First();
     
     public function IndexOf($element)
     {
