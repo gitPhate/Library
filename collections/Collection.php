@@ -77,7 +77,14 @@ class Collection extends SimpleList implements ICollection
         $args = func_get_args();
         $callback = array_shift($args);
         
-        return new Collection($this->ApplyCallback($callback, $args));
+        $results = $this->ApplyCallback($callback, $args);
+        
+        if(empty(array_diff($results, $this->items)))
+        {
+            throw new ArgumentException("The callback does not have a return value");
+        }
+        
+        return new Collection();
     }
     
     public function Range($size, $from = null)
@@ -130,9 +137,10 @@ class Collection extends SimpleList implements ICollection
         
         $results = array();
         
-        foreach($this->items as $k => $v)
+        foreach($this->items as $v)
         {
-            $ret = call_user_func_array($callback, array_merge(array($k, $v), $args));
+            $ret = call_user_func_array($callback, array_merge(array($v), $args));
+            
             $results[] = (is_null($ret)) ? $v : $ret;
         }
         

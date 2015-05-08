@@ -170,7 +170,8 @@ SimpleList is a class that represents a list. It has the basic method of a list,
 * `Clear()` - *Inherited from AbstractCollection*
 * `Contains($element)` - *defined in IList*
 * `Count()` - *Inherited from AbstractCollection*
-* `First()` - *Inherited from AbstractCollection*
+* `First()` - *Overridden from AbstractCollection*
+* `IndexOf($element)` - *Inherited from AbstractCollection*
 * `Remove($value)` - *Overridden from AbstractCollection*
 * `ToArray()` - *Overridden from AbstractCollection*
 * `ToCollection()` - *Overridden from AbstractCollection*
@@ -204,7 +205,11 @@ public mixed First();
 ```
 Returns the first element of the list.
 ```PHP
-public mixed Remove(mixed $value);
+public int IndexOf(mixed $element);
+```
+Searches for the element and returns the index if it's found. It returns false otherwise.
+```PHP
+public bool Remove(mixed $value);
 ```
 Removes the element from the list. This method is overridden from the AbstractCollection class.
 ```PHP
@@ -212,7 +217,7 @@ public array ToArray();
 ```
 Returns the elements of the list as an array. This method is overridden from the AbstractCollection class.
 ```PHP
-public array ToCollection();
+public Collection ToCollection();
 ```
 Returns the elements of the list as an instance of the Collection class. See below for an API reference of this class. This method is overridden from the AbstractCollection class.
 
@@ -238,7 +243,7 @@ Constructor of the class. It can accepts an array to be inserted in the list.
 public void Each(callable $callback, [mixed $param1, mixed $param2, ...]);
 ```
 The `Each()` method applies a callback on every element of the collection. It modifies the internal data set directly, thus it has no return value. You can pass parameters to the callback by passing parameters to `Each()`.
-In order to edit data, your callback can return a value, which will be set as the current item in the collection. Moreover, it can accept two parameters, the key and the value of the current element. Examples:
+In order to edit data, your callback can return a value, which will be set as the current item in the collection. Moreover, it can accept the value of the current element as a parameter. Examples:
 ```PHP
 include("Library\autoload.php");
 
@@ -246,7 +251,7 @@ use Library\Collections\Collection;
 
 $list = new Collection([1, 2, 3, 4, 5]);
 
-$list->Each(function ($key, $value) {
+$list->Each(function ($value) {
    return $value + 1;
 });
 
@@ -255,7 +260,7 @@ var_dump(
 );
 // prints [2, 3, 4, 5, 6]
 
-$list->Each(function ($key, $value, $number1, $number2) {
+$list->Each(function ($value, $number1, $number2) {
    return $value + $number1 + $number2;
 }, 1, 1);
 
@@ -290,7 +295,7 @@ var_dump($newList->ToArray()); // prints [4]
 ```PHP
 public Collection Map(callable $callback, [mixed $param1, mixed $param2, ...]);
 ```
-`Map()` acts the same as `Each()`, with the only difference that returns a new `Collection` object instead of editing internal data.
+`Map()` acts the same as `Each()`, with the only difference that returns a new `Collection` object instead of editing internal data. The provided callback must have a return value, otherwise an exception will be thrown.
 
 ##### Range
 ```PHP
@@ -320,6 +325,7 @@ Dictionary is a basic dictionary class. It inherits from AbstractCollection, the
 * `__construct()`
 * `Add($key, $value)`
 * `ContainsKey($key)`
+* `First()`
 * `Keys()`
 * `Values()`
 
@@ -336,6 +342,10 @@ Adds the element at the specific key. It throws an exception if there is already
 public void ContainsKey(mixed $key);
 ```
 Checks whether an element with the key `$key` already exists. If so, it returns true, otherwise it will return false.
+```PHP
+public Tuple First();
+```
+Returns the first element of the list as a Tuple with the key as the Item1 and the value as the Item2.
 ```PHP
 public void Keys();
 ```

@@ -38,6 +38,11 @@ class SimpleList extends AbstractCollection implements IList
     
     //Inherited abstract methods
     
+    public function First()
+    {
+        return $this->items[0];
+    }
+    
     public function Remove($value)
     {
         $index = $this->search_item($value);
@@ -46,6 +51,8 @@ class SimpleList extends AbstractCollection implements IList
         {
             unset($this->items[$index]);
             $this->items = array_values($this->items);
+            
+            return true;
         }
         else
         {

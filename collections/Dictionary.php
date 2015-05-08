@@ -50,6 +50,14 @@ class Dictionary extends AbstractCollection implements IDictionary
     
     //Inherited abstract methods
     
+    public function First()
+    {
+        $array = $this->items;
+        $value = reset($array);
+        
+        return new Tuple(key($array), $value);
+    }
+    
     public function Remove($value)
     {
         if(is_null($value))
@@ -58,6 +66,8 @@ class Dictionary extends AbstractCollection implements IDictionary
         }
         
         unset($this->items[$value]);
+        
+        return true;
     }
     
     public function ToArray()
