@@ -209,7 +209,7 @@ public int IndexOf(mixed $element);
 ```
 Searches for the element and returns the index if it's found. It returns false otherwise.
 ```PHP
-public mixed Remove(mixed $value);
+public bool Remove(mixed $value);
 ```
 Removes the element from the list. This method is overridden from the AbstractCollection class.
 ```PHP
@@ -217,7 +217,7 @@ public array ToArray();
 ```
 Returns the elements of the list as an array. This method is overridden from the AbstractCollection class.
 ```PHP
-public array ToCollection();
+public Collection ToCollection();
 ```
 Returns the elements of the list as an instance of the Collection class. See below for an API reference of this class. This method is overridden from the AbstractCollection class.
 
