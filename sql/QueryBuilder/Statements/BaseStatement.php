@@ -3,6 +3,7 @@ namespace Library\Sql\QueryBuilder\Statements;
 
 use Library\Exceptions as Excs;
 use Library\Sql\QueryBuilder\Enums;
+use Library\Utilities\UtilitiesService;
 
 abstract class BaseStatement
 {
@@ -16,7 +17,7 @@ abstract class BaseStatement
             throw new Excs\ArgumentException("Invalid type");
         }
         
-        if(!is_array($params))
+        if(!is_array($params) && UtilitiesService::GetParentClassName($params) != "BaseQuery")
         {
             throw new Excs\ArgumentException("Invalid params");
         }

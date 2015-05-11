@@ -4,6 +4,7 @@ namespace Library\Sql\QueryBuilder;
 use Library\Exceptions as Excs;
 use Library\Sql\QueryBuilder\Statements\WhereStatement;
 use Library\Sql\QueryBuilder\Enums\WhereType;
+use Library\Utilities\UtilitiesService;
 
 abstract class BaseQuery
 {
@@ -82,7 +83,7 @@ abstract class BaseQuery
             }
             else
             {
-                if(is_array($params))
+                if(is_array($params) || UtilitiesService::GetParentClassName($params) == "BaseQuery")
                 {
                     $field = $cond;
                     $op =  (($not) ? "NOT " : "").'IN';
@@ -92,7 +93,7 @@ abstract class BaseQuery
                 {
                     $field = $cond;
                     $op = ($not) ? "!=" : "=";
-                    $matches = array(\Library\Utilities\UtilitiesService::WrapInQuotes($params));
+                    $matches = array(UtilitiesService::WrapInQuotes($params));
                 }
                 else
                 {

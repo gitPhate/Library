@@ -1,6 +1,8 @@
 <?php
 namespace Library\Sql\QueryBuilder\QueryItems;
 
+use Library\Sql\QueryBuilder\Enums\OrderByOperator;
+
 class OrderByField extends QueryItem
 {
     public $operator;
@@ -17,17 +19,7 @@ class OrderByField extends QueryItem
         $this->operator = $operator;
     }
     
-    protected function FindAlias($string, &$matches)
-    {
-        return false;
-    }
-    
     public function toSql()
-    {
-        $this->toStr();
-    }
-    
-    public function toStr()
     {
         return $this->name . OrderByOperator::getKeyword($this->operator);
     }

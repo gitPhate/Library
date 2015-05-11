@@ -5,22 +5,12 @@ class Table extends QueryItem
 {
     public function __construct($string, $alias = null)
     {
-        if(preg_match("/\s/", trim($string)))
-        {
-            $string = "(".$string.")";
-        }
-        
         parent::__construct($string, $alias);
-    }
-    
-    protected function FindAlias($string, &$matches)
-    {
-        return preg_match("/^(.*?)\s+(?:as\s+)?(.*?)$/i", $string, $matches);
     }
     
     public function toSql()
     {
-        $buffer = $this->name;
+        $buffer = ($this->is_query) ? "(".$this->name->toSql().")" : $this->name;
         
         if($this->has_alias)
         {
