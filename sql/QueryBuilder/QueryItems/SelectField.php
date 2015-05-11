@@ -12,11 +12,6 @@ class SelectField extends QueryItem
         $this->is_distinct = $distinct;
     }
     
-    protected function FindAlias($string, &$matches)
-    {
-        return preg_match("/^(.*?)\s+(?:as\s+)(.*?)$/i", $string, $matches);
-    }
-    
     public function toSql()
     {
         $buffer = (($this->is_distinct) ? "DISTINCT " : "").$this->name;

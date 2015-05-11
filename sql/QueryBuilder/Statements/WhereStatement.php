@@ -44,9 +44,16 @@ class WhereStatement extends BaseStatement
         {
             $buffer .= "{$this->field} {$this->operator} (";
             
-            foreach($this->params as $k => $param)
+            if(is_array($this->params))
             {
-                $buffer .= $param.(($k != count($this->params) - 1) ? ", " : "");
+                foreach($this->params as $k => $param)
+                {
+                    $buffer .= $param.(($k != count($this->params) - 1) ? ", " : "");
+                }
+            }
+            else
+            {
+                $buffer .= $this->params->toSql();
             }
             
             $buffer .= ")";

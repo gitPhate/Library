@@ -2,6 +2,7 @@
 namespace Library\Sql\QueryBuilder\QueryItems;
 
 use Library\Exceptions as Excs;
+use Library\Utilities\UtilitiesService;
 
 abstract class QueryItem
 {
@@ -9,12 +10,13 @@ abstract class QueryItem
     public $alias;
     
     protected $has_alias;
+    protected $is_query;
     
-    public function __construct($string, $alias = null)
+    public function __construct($string, $alias = null, $parameters = null)
     {
-        if(!is_string($string))
+        if(!is_string($string) && UtilitiesService::GetParentClassName($string) != "BaseQuery")
         {
-            throw new Excs\ArgumentException("Table must be a string");
+            throw new Excs\ArgumentException("Invalid table");
         }
         
         if(!is_null($alias) && !is_string($alias))
@@ -22,7 +24,16 @@ abstract class QueryItem
             throw new Excs\ArgumentException("Alias must be a string");
         }
         
-        if(is_null($alias))
+        if(UtilitiesService::GetParentClassName($string) == "BaseQuery")
+        {
+            $this->is_query = true;
+        }
+        else
+        {
+            $this->is_query = false;
+        }
+        
+        if(is_null($alias) && !$this->is_query)
         {
             if($this->FindAlias($string, $matches))
             {
@@ -45,12 +56,16 @@ abstract class QueryItem
         }
     }
     
+    protected function FindAlias($string, &$matches)
+    {
+        return preg_match("/^(.*?)\s+(?:as\s+)?(.*?)$/i", $string, $matches);
+    }
+    
     public function HasAlias()
     {
         return $this->has_alias;
     }
     
-    protected abstract function FindAlias($string, &$matches);
     public abstract function toSql();
 }
 ?>
