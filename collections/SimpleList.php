@@ -16,14 +16,17 @@ class SimpleList extends AbstractCollection implements IList
     
     public function Add($element)
     {
-        if(is_array($element))
+        $this->items[] = $element;
+    }
+    
+    public function AddRange($elements)
+    {
+        if(!is_array($element))
         {
-            $this->items = array_merge($element, $this->items);
+            throw new ArgumentException("Invalid elements");
         }
-        else
-        {
-            $this->items[] = $element;
-        }
+        
+        $this->items = array_merge($element, $this->items);
     }
     
     public function Contains($element)
