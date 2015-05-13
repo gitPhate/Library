@@ -1,7 +1,7 @@
 <?php
 namespace Library\Sql;
 
-use Library\Exceptions as Excs;
+use Library\Exceptions\ArgumentException;
 
 final class DatabaseConfig
 {
@@ -14,22 +14,22 @@ final class DatabaseConfig
 	{
 		if(!is_string($host))
 		{
-			throw new Excs\ArgumentException("Invalid host");
+			throw new ArgumentException("Invalid host");
 		}
 		
 		if(!is_string($user))
 		{
-			throw new Excs\ArgumentException("Invalid host");
+			throw new ArgumentException("Invalid host");
 		}
 		
 		if(!is_string($psw))
 		{
-			throw new Excs\ArgumentException("Invalid host");
+			throw new ArgumentException("Invalid host");
 		}
 		
 		if(!is_string($name))
 		{
-			throw new Excs\ArgumentException("Invalid host");
+			throw new ArgumentException("Invalid host");
 		}
 		
 		$this->Host = $host;

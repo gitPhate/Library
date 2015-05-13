@@ -1,6 +1,7 @@
 <?php
 namespace Library\Sql;
 use Library\Exceptions as Excs;
+use Library\Utilities\UtilitiesService;
 
 final class Database
 {
@@ -28,7 +29,7 @@ final class Database
 	
 	public function __construct($config)
 	{
-		if(getClassName($config) != "DatabaseConfig")
+		if(UtilitiesService::GetClassName($config) != "DatabaseConfig")
 		{
 			throw new Excs\ArgumentException("Invalid configuration object");
 		}
@@ -61,13 +62,15 @@ final class Database
 	
 	public function Query($query)
 	{
-		if(basename(get_parent_class($query)) == "BaseQuery")
+		if(UtilitiesService::GetParentClassName($query) == "BaseQuery")
 		{
-			$query = $query->__toString();
+			$query = $query->toSql();
 		}
 		
 		$result = $this->db->query($query);
+        
 		$this->SetPropsForOperation();
+        
 		$this->AffectedRows = $this->db->affected_rows;
 		$this->Info = $this->db->info;
 		$this->InsertId = $this->db->insert_id;
