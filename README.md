@@ -682,7 +682,56 @@ $query
 [Index](#querybuilder)
 
 ##### SubQueries
-Still work in progress!
+Subqueries are one of the most interesting features of SQL, and thus they are being used in many queries.
+You can pass another query (built with the QueryBuilder) to the from method the where method or where such a behaviour is documented. Let's see some examples:
+```PHP
+$qb->SelectAll()
+->From
+(
+    $qb->Select("field")
+    ->From("table")
+    ->Where("field"),
+    "alias"
+)
+/*
+SELECT *
+FROM (
+	SELECT field
+	FROM table
+	WHERE field IS NULL
+) alias
+*/
+```
+This is a simple query in which the from clause is another query.
+```PHP
+$qb->SelectAll()
+->From("table")
+->Where
+(
+    "field",
+    $qb->SelectAll()
+    ->From("table2")
+    ->Where
+    (
+        "id BETWEEN :start AND :end",
+        [
+            ':start' => 123,
+            ':end' => 567
+        ]
+    )
+)
+/*
+SELECT *
+FROM table
+WHERE field IN (
+	SELECT * 
+	FROM table2
+	WHERE id BETWEEN 123 AND 567
+)
+*/
+```
+This instead uses subqueries in the IN clause.
+
 
 [Index](#querybuilder)
 
