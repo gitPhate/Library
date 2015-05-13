@@ -159,6 +159,7 @@ Some classes are built upon their abstract one, and they implement some interfac
 SimpleList is a class that represents a list. It has the basic method of a list, here's a complete reference:
 * `__construct($initialItems = null)`
 * `Add($element)` - *defined in IList*
+* `AddRange($elements)` - *defined in IList*
 * `Any()` - *Inherited from AbstractCollection*
 * `Clear()` - *Inherited from AbstractCollection*
 * `Contains($element)` - *defined in IList*
@@ -176,7 +177,11 @@ Constructor of the class. It can accepts an array to be inserted in the list.
 ```PHP
 public void Add(mixed $element);
 ```
-Adds an element or an array of elements to the list.
+Adds an element to the list.
+```PHP
+public void AddRange(array $elements);
+```
+Adds an array of elements to the list.
 ```PHP
 public bool Any();
 ```
