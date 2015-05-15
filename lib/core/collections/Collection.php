@@ -1,10 +1,11 @@
 <?php
-namespace Library\Collections;
+namespace Library\Core\Collections;
 
-use Library\Collections\Interfaces\ICollection;
-use Library\Exceptions\ArgumentException;
-use Library\Exceptions\IndexOutOfRangeException;
-use Library\Utilities\UtilitiesService;
+use Library\Core\Collections\Interfaces\ICollection;
+use Library\Core\Collections\FilterMode;
+use Library\Core\Exceptions\ArgumentException;
+use Library\Core\Exceptions\IndexOutOfRangeException;
+use Library\Core\Utilities\UtilitiesService;
 
 
 class Collection extends SimpleList implements ICollection
@@ -24,14 +25,14 @@ class Collection extends SimpleList implements ICollection
         $this->items = $this->ApplyCallback($callback, $args);
     }
     
-    public function Filter($callback, $mode = \FilterMode::Values)
+    public function Filter($callback, $mode = FilterMode::Values)
     {
         if(!is_callable($callback))
         {
             throw new ArgumentException("Invalid callback");
         }
         
-        if(!\FilterMode::isValidValue($mode))
+        if(!FilterMode::isValidValue($mode))
         {
             throw new ArgumentException("Invalid filter mode");
         }
@@ -40,7 +41,7 @@ class Collection extends SimpleList implements ICollection
         
         switch($mode)
         {
-            case \FilterMode::Keys:
+            case FilterMode::Keys:
                 foreach($this->items as $k => $v)
                 {
                     if($callback($k))
@@ -49,7 +50,7 @@ class Collection extends SimpleList implements ICollection
                     }
                 }
             break;
-            case \FilterMode::Values:
+            case FilterMode::Values:
                 foreach($this->items as $v)
                 {
                     if($callback($v))
@@ -58,7 +59,7 @@ class Collection extends SimpleList implements ICollection
                     }
                 }
             break;
-            case \FilterMode::Both:
+            case FilterMode::Both:
                 foreach($this->items as $k => $v)
                 {
                     if($callback($k, $v))
@@ -147,6 +148,4 @@ class Collection extends SimpleList implements ICollection
         return $results;
     }
 }
-
-require_once("Library\Collections\FilterMode.php");
 ?>

@@ -1,8 +1,8 @@
 <?php
-namespace Library\Collections;
+namespace Library\Core\Collections;
 
-use Library\Collections\Interfaces\IDictionary;
-use Library\Exceptions\ArgumentException;
+use Library\Core\Collections\Interfaces\IDictionary;
+use Library\Core\Exceptions\ArgumentException;
 
 class Dictionary extends AbstractCollection implements IDictionary
 {

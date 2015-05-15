@@ -1,9 +1,9 @@
 <?php
-namespace Library\Collections;
+namespace Library\Core\Collections;
 
-use Library\Collections\Interfaces\IBaseCollection;
-use Library\Collections\Interfaces\IList;
-use Library\Exceptions\ArgumentException;
+use Library\Core\Collections\Interfaces\IBaseCollection;
+use Library\Core\Collections\Interfaces\IList;
+use Library\Core\Exceptions\ArgumentException;
 
 class SimpleList extends AbstractCollection implements IList
 {

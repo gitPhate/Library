@@ -3,7 +3,7 @@ namespace Library\Sql\QueryBuilder\Enums;
 
 use Library\Exceptions as Excs;
 
-abstract class OrderByOperator extends \Library\BaseEnum
+abstract class OrderByOperator extends \Library\Core\BaseEnum
 {
     const Asc = 0;
     const Desc = 1;

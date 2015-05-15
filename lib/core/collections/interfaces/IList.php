@@ -1,5 +1,5 @@
 <?php
-namespace Library\Collections\Interfaces;
+namespace Library\Core\Collections\Interfaces;
 
 interface IList
 {

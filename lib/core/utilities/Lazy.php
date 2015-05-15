@@ -1,5 +1,5 @@
 <?php
-namespace Library;
+namespace Library\Core\Utilities;
 
 use Library\Exceptions as Excs;
 use Library\Utilities\CallbackManager;

@@ -1,7 +1,7 @@
 <?php
 namespace Library\Sql\QueryBuilder\Enums;
 
-abstract class StatementType extends \Library\BaseEnum
+abstract class StatementType extends \Library\Core\BaseEnum
 {
     const Where = "where";
     const Join = "join";

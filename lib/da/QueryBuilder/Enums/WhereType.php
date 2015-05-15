@@ -3,7 +3,7 @@ namespace Library\Sql\QueryBuilder\Enums;
 
 use Library\Exceptions as Excs;
 
-abstract class WhereType extends \Library\BaseEnum
+abstract class WhereType extends \Library\Core\BaseEnum
 {
     const First = 0;
     const AndWhere = 1;

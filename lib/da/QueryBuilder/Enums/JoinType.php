@@ -3,7 +3,7 @@ namespace Library\Sql\QueryBuilder\Enums;
 
 use Library\Exceptions as Excs;
 
-abstract class JoinType extends \Library\BaseEnum
+abstract class JoinType extends \Library\Core\BaseEnum
 {
     const Inner = 0;
     const Left = 1;

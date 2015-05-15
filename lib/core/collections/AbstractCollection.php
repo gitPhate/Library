@@ -1,8 +1,8 @@
 <?php
-namespace Library\Collections;
+namespace Library\Core\Collections;
 
-use Library\Collections\Interfaces\IBaseCollection;
-use Library\Exceptions\ArgumentException;
+use Library\Core\Collections\Interfaces\IBaseCollection;
+use Library\Core\Exceptions\ArgumentException;
 
 abstract class AbstractCollection implements IBaseCollection, \ArrayAccess
 {

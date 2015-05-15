@@ -1,7 +1,7 @@
 <?php
-namespace Library\Collections;
+namespace Library\Core\Collections;
 
-use Library\Exceptions\ArgumentException;
+use Library\Core\Exceptions\ArgumentException;
 
 class Tuple
 {
